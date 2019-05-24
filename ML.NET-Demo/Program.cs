@@ -14,7 +14,7 @@ namespace ML.NET_Demo
 
             // 导入训练数据
             var dataReader = new HouseDataReader();
-            var houses = dataReader.GetDatas().ToArray();
+            var houses = dataReader.GetTrainingDatas().ToArray();
             Console.WriteLine($"训练数据：\n\t{string.Join("\n\t", houses.Select(house => $"面积: {house.Size}\t价格: {house.Price}"))}");
             Console.WriteLine();
 
@@ -36,8 +36,15 @@ namespace ML.NET_Demo
             Enumerable.Range(10, 20).ToList().ForEach(index =>
             {
                 var price = engine.Predict(new House(index, 0f));
-                Console.WriteLine($"面积: {index}\t价格: {price.Price}");
+                Console.WriteLine($"\t面积: {index}\t价格: {price.Price}");
             });
+
+            Console.WriteLine($"评估：");
+            var testHouseDataView = mlContext.Data.LoadFromEnumerable(dataReader.GetTestDatas());
+            var testPriceDataView = model.Transform(testHouseDataView);
+            var metrics = mlContext.Regression.Evaluate(testPriceDataView, labelColumnName: "Price");
+            Console.WriteLine($"R^2: {metrics.RSquared:0.##}");
+            Console.WriteLine($"RMS error: {metrics.RootMeanSquaredError:0.##}");
 
             Console.Read();
         }

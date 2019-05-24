@@ -12,12 +12,18 @@ namespace ML.NET_Demo.DataReader
     {
         protected static Lazy<Random> Random = new Lazy<Random>(() => new Random(), true);
 
-        public IEnumerable<House> GetDatas()
+        public IEnumerable<House> GetTrainingDatas()
         => Enumerable.Range(10, 10).Select((index) =>
              {
                  float size = index;
-                 float price = (float)(size * 150 * (1 + Random.Value.Next(-10, 10) / (double)100));
+                 float price = (float)(this.GetPrice(size) * (1 + Random.Value.Next(-10, 10) / (double)100));
                  return new House(size, price);
              }).ToArray();
+
+        public IEnumerable<House> GetTestDatas()
+        => Enumerable.Range(10, 20).Select(Index => new House(Index, this.GetPrice(Index)));
+
+        private float GetPrice(float size)
+            => size * 150;
     }
 }
