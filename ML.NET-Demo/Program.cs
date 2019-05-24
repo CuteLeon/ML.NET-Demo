@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.ML;
 using ML.NET_Demo.DataReader;
@@ -12,27 +13,42 @@ namespace ML.NET_Demo
         static void Main(string[] args)
         {
             MLContext mlContext = new MLContext();
-
-            // 导入训练数据
             var dataReader = new HouseDataReader();
-            var houses = dataReader.GetTrainingDatas().ToArray();
-            Helper.PrintLine($"训练数据：\n\t{string.Join("\n\t", houses.Select(house => $"面积: {house.Size.ToString("N2")}\t价格: {house.Price}"))}");
-            Helper.PrintSplit();
+            ITransformer model = null;
 
-            var trainingData = mlContext.Data.LoadFromEnumerable(houses);
+            if (File.Exists("model.zip"))
+            {
+                Helper.PrintLine("已存在模型文件 model.zip，开始加载...");
+                // 加载训练模型
+                model = mlContext.Model.Load("model.zip", out DataViewSchema schema);
+            }
+            else
+            {
+                // 导入训练数据
+                var houses = dataReader.GetTrainingDatas().ToArray();
+                Helper.PrintLine($"训练数据：\n\t{string.Join("\n\t", houses.Select(house => $"面积: {house.Size.ToString("N2")}\t价格: {house.Price}"))}");
+                Helper.PrintSplit();
 
-            // 指定数据预备和训练管道
-            var pipeline = mlContext.Transforms
-                .Concatenate("Features", new[] { "Size" })
-                .Append(mlContext.Regression.Trainers.Sdca(labelColumnName: "Price", maximumNumberOfIterations: 100));
+                var trainingData = mlContext.Data.LoadFromEnumerable(houses);
 
-            // 训练模型
-            Helper.PrintLine("开始训练...");
-            var model = pipeline.Fit(trainingData);
-            Helper.PrintLine("训练结束");
-            Helper.PrintSplit();
+                // 指定数据预备和训练管道
+                /* Features: 特征 表示神经网络的输入 */
+                var pipeline = mlContext.Transforms
+                    .Concatenate("Features", new[] { "Size" })
+                    .Append(mlContext.Regression.Trainers.Sdca(labelColumnName: "Price", maximumNumberOfIterations: 100));
+
+                // 训练模型
+                Helper.PrintLine("开始训练...");
+                model = pipeline.Fit(trainingData);
+                Helper.PrintLine("训练结束");
+                Helper.PrintSplit();
+
+                // 导出训练模型
+                mlContext.Model.Save(model, trainingData.Schema, "model.zip");
+            }
 
             // 预测
+            /* Score: 分数 表示神经网络的输出 */
             Helper.PrintLine($"预测：");
             // 创建预测引擎
             var engine = mlContext.Model.CreatePredictionEngine<House, Prediction>(model);
