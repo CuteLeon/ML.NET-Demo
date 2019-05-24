@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28917.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ML.NET-Demo", "ML.NET-Demo\ML.NET-Demo.csproj", "{BFC83975-71C4-444A-B1BF-F69B4EA0E2DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFC83975-71C4-444A-B1BF-F69B4EA0E2DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFC83975-71C4-444A-B1BF-F69B4EA0E2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFC83975-71C4-444A-B1BF-F69B4EA0E2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFC83975-71C4-444A-B1BF-F69B4EA0E2DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {15B80E10-7901-4E08-9438-F1E8E70F7720}
+	EndGlobalSection
+EndGlobal
