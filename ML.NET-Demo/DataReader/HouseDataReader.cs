@@ -13,10 +13,10 @@ namespace ML.NET_Demo.DataReader
         protected static Lazy<Random> Random = new Lazy<Random>(() => new Random(), true);
 
         public IEnumerable<House> GetTrainingDatas()
-        => Enumerable.Range(10, 10).Select((index) =>
+        => Enumerable.Range(0, 1000).Select((index) =>
              {
-                 float size = index;
-                 float price = (float)(this.GetPrice(size) * (1 + Random.Value.Next(-10, 10) / (double)100));
+                 float size = (float)(10 + index / 100.0d);
+                 float price = (float)(this.GetPrice(size) * (1 + Random.Value.Next(-3, 3) / (double)100));
                  return new House(size, price);
              }).ToArray();
 
