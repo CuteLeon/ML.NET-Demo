@@ -1,5 +1,11 @@
 # ML.NET-学习笔记
 
+> Link: https://docs.microsoft.com/zh-cn/dotnet/machine-learning/how-does-mldotnet-work
+>
+> author: Leon
+>
+> Date: 2019/05/24
+
 > ML.NET API 有两组包：发布组件和预览组件。 发布 API 包含用于数据处理的组件、用于二元分类、多类分类、回归、异常情况检测和排名的算法以及模型保存和加载等等！ 预览 API 包含 ONNX 和 TensorFlow 模型处理、推荐任务算法以及用于处理时序数据的组件。
 
 # 概述
@@ -29,6 +35,8 @@
 - 将模型加载回 **ITransformer** 对象
 - 通过调用 **CreatePredictionEngine.Predict()** 进行预测
 
+![](Images\mldotnet-annotated-workflow.png)
+
 ## 机器学习模型
 
 ​	用于查找模型参数的数据称为**训练数据**。 
@@ -48,3 +56,39 @@
 ## 模型评估
 
 ​	每种类型的机器学习任务都具有用于根据测试数据集评估模型的准确性和精确性的指标。
+
+​	需要进行更多调整才能获得良好的模型指标。
+
+## ML.NET 体系结构
+
+​	ML.NET 应用程序从 [MLContext](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.mlcontext) 对象开始。 此单一实例对象包含**目录**。 目录是用于数据加载和保存、转换、训练程序和模型操作组件的工厂。 每个目录对象都具有创建不同类型的组件的方法：
+
+|                |              |                                                              |
+| :------------- | :----------- | :----------------------------------------------------------- |
+| 数据加载和保存 |              | [DataOperationsCatalog](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.dataoperationscatalog) |
+| 数据准备       |              | [TransformsCatalog](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.transformscatalog) |
+| 训练算法       | 二元分类     | [BinaryClassificationCatalog](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.binaryclassificationcatalog) |
+|                | 多类分类     | [MulticlassClassificationCatalog](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.multiclassclassificationcatalog) |
+|                | 异常情况检测 | [AnomalyDetectionCatalog](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.anomalydetectioncatalog) |
+|                | 排名         | [RankingCatalog](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.rankingcatalog) |
+|                | 回归测试     | [RegressionCatalog](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.regressioncatalog) |
+|                | 建议         | [RecommendationCatalog](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.recommendationcatalog) |
+| 模型使用       |              | [ModelOperationsCatalog](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.modeloperationscatalog) |
+
+### 生成管道
+
+​	每个目录中都有一组扩展方法。
+
+### 定型模型
+
+​	调用 `Fit()` 使用输入训练数据来估算模型的参数。 这称为训练模型。
+
+​	上述线性回归模型有两个模型参数：**偏差**和**权重**。
+
+### 使用模型
+
+​	可以将输入数据批量转换为预测，也可以一次转换一个输入。
+
+### 数据模型和架构
+
+​	ML.NET 机器学习管道的核心是 [DataView](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.idataview) 对象。
