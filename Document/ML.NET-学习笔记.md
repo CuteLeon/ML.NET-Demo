@@ -105,3 +105,13 @@
 
 ### 模型部署
 
+​	在实际应用程序中，模型训练和评估代码将与预测分离。 
+
+# 教程
+
+## 分析情绪(二元分类)
+
+> 数据源：[UCI Sentiment Labeled Sentences 数据集 zip 文件](https://archive.ics.uci.edu/ml/machine-learning-databases/00331/sentiment labelled sentences.zip) 的 yelp_labelled.txt
+
+
+

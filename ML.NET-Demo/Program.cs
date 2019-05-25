@@ -29,17 +29,17 @@ namespace ML.NET_Demo
                 Helper.PrintLine($"训练数据：\n\t{string.Join("\n\t", houses.Select(house => $"面积: {house.Size.ToString("N2")}\t价格: {house.Price}"))}");
                 Helper.PrintSplit();
 
-                var trainingData = mlContext.Data.LoadFromEnumerable(houses);
+                IDataView trainingData = mlContext.Data.LoadFromEnumerable(houses);
 
                 // 指定数据预备和训练管道
                 /* Features: 特征 表示神经网络的输入 */
-                var pipeline = mlContext.Transforms
+                var estimator = mlContext.Transforms
                     .Concatenate("Features", new[] { "Size" })
                     .Append(mlContext.Regression.Trainers.Sdca(labelColumnName: "Price", maximumNumberOfIterations: 100));
 
                 // 训练模型
                 Helper.PrintLine("开始训练...");
-                model = pipeline.Fit(trainingData);
+                model = estimator.Fit(trainingData);
                 Helper.PrintLine("训练结束");
                 Helper.PrintSplit();
 

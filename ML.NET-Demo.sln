@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28917.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ML.NET-Demo", "ML.NET-Demo\ML.NET-Demo.csproj", "{BFC83975-71C4-444A-B1BF-F69B4EA0E2DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ML.NET-Demo", "ML.NET-Demo\ML.NET-Demo.csproj", "{BFC83975-71C4-444A-B1BF-F69B4EA0E2DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SentimentAnalysis", "SentimentAnalysis\SentimentAnalysis.csproj", "{23D407E6-EB7C-454B-B676-C94839E2BCD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{BFC83975-71C4-444A-B1BF-F69B4EA0E2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFC83975-71C4-444A-B1BF-F69B4EA0E2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFC83975-71C4-444A-B1BF-F69B4EA0E2DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23D407E6-EB7C-454B-B676-C94839E2BCD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23D407E6-EB7C-454B-B676-C94839E2BCD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23D407E6-EB7C-454B-B676-C94839E2BCD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23D407E6-EB7C-454B-B676-C94839E2BCD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
