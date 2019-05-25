@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace ML.NET_Demo.Utils
+namespace ML.Utils
 {
     /// <summary>
     /// 通用助手
@@ -20,5 +20,17 @@ namespace ML.NET_Demo.Utils
         /// </summary>
         public static void PrintSplit()
             => Console.WriteLine("——————————————");
+
+        /// <summary>
+        /// 退出程序
+        /// </summary>
+        /// <param name="exitCode"></param>
+        public static void Exit(int exitCode = 0)
+        {
+            PrintSplit();
+            PrintLine($"程序即将退出... ExitCode={exitCode}");
+            Console.Read();
+            Environment.Exit(exitCode);
+        }
     }
 }

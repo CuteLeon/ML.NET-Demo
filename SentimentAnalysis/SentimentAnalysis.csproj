@@ -9,4 +9,14 @@
     <Compile Include="..\ML.NET-Demo\Utils\Helper.cs" Link="Helper.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Datas\yelp_labelled.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

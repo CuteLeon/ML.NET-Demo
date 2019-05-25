@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.ML;
 using ML.NET_Demo.DataReader;
 using ML.NET_Demo.Models;
-using ML.NET_Demo.Utils;
+using ML.Utils;
 
 namespace ML.NET_Demo
 {
