@@ -32,18 +32,31 @@ namespace SentimentAnalysis
 
             Helper.PrintLine("创建 MLContext...");
             MLContext mlContext = new MLContext();
+            ITransformer model;
 
-            // 加载训练和测试数据
-            Helper.PrintSplit();
-            Helper.PrintLine("加载训练和测试数据...");
-            TrainTestData splitDataView = LoadData(mlContext);
+            if (File.Exists(ModelPath))
+            {
+                Helper.PrintLine("加载神经网络模型...");
+                model = mlContext.Model.Load(ModelPath, out DataViewSchema inputSchema);
+            }
+            else
+            {
+                // 加载训练和测试数据
+                Helper.PrintSplit();
+                Helper.PrintLine("加载训练和测试数据...");
+                TrainTestData splitDataView = LoadData(mlContext);
 
-            // 创建和训练模型
-            Helper.PrintLine("创建和训练神经网络模型...");
-            ITransformer model = BuildAndTrainModel(mlContext, splitDataView.TrainSet);
+                // 创建和训练模型
+                Helper.PrintLine("创建和训练神经网络模型...");
+                model = BuildAndTrainModel(mlContext, splitDataView.TrainSet);
 
-            // 使用测试数据评估神经网络
-            Evaluate(mlContext, model, splitDataView.TestSet);
+                // 使用测试数据评估神经网络
+                Evaluate(mlContext, model, splitDataView.TestSet);
+
+                // 保存神经网络模型
+                Helper.PrintLine("保存神经网络模型...");
+                mlContext.Model.Save(model, splitDataView.TrainSet.Schema, ModelPath);
+            }
 
             // 预测
             Predict(mlContext, model);
