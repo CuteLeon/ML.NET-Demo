@@ -2,11 +2,11 @@
 
 > Link: https://docs.microsoft.com/zh-cn/dotnet/machine-learning/how-does-mldotnet-work
 >
-> samples: https://github.com/dotnet/machinelearning-samples
+> Samples: https://github.com/dotnet/machinelearning-samples
 >
-> tutorials: https://github.com/dotnet/samples/tree/master/machine-learning/tutorials
+> Tutorials: https://github.com/dotnet/samples/tree/master/machine-learning/tutorials
 >
-> author: Leon
+> Author: Leon
 >
 > Date: 2019/05/24
 
@@ -126,4 +126,12 @@
 ## 对支持问题进行分类(多类分类)
 
 > 数据源：[issues_train.tsv](https://raw.githubusercontent.com/dotnet/samples/master/machine-learning/tutorials/GitHubIssueClassification/Data/issues_train.tsv) 和 [issues_test.tsv](https://raw.githubusercontent.com/dotnet/samples/master/machine-learning/tutorials/GitHubIssueClassification/Data/issues_test.tsv)
+
+
+
+## 预测价格(回归)
+
+> 数据集：[taxi-fare-train.csv](https://github.com/dotnet/machinelearning/blob/master/test/data/taxi-fare-train.csv) 和 [taxi-fare-test.csv](https://github.com/dotnet/machinelearning/blob/master/test/data/taxi-fare-test.csv)
+
+
 
