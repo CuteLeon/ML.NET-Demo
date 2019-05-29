@@ -2,6 +2,10 @@
 
 > Link: https://docs.microsoft.com/zh-cn/dotnet/machine-learning/how-does-mldotnet-work
 >
+> samples: https://github.com/dotnet/machinelearning-samples
+>
+> tutorials: https://github.com/dotnet/samples/tree/master/machine-learning/tutorials
+>
 > author: Leon
 >
 > Date: 2019/05/24
