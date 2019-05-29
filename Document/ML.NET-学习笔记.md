@@ -6,6 +6,10 @@
 >
 > Tutorials: https://github.com/dotnet/samples/tree/master/machine-learning/tutorials
 >
+> ML.NETModelBuilder: https://marketplace.visualstudio.com/items?itemName=MLNET.07
+>
+> ML.NETModelBuilder-Tutorial: https://dotnet.microsoft.com/learn/machinelearning-ai/ml-dotnet-get-started-tutorial/intro
+>
 > Author: Leon
 >
 > Date: 2019/05/24
