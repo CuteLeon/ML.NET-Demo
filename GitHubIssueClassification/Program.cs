@@ -26,10 +26,9 @@ namespace GitHubIssueClassification
 
         static void Main(string[] args)
         {
-            // MLContext
             Helper.PrintLine("创建 MLContext...");
             MLContext mlContext = new MLContext(seed: 0);
-            ITransformer model = null;
+            ITransformer model;
 
             if (File.Exists(ModelPath))
             {
