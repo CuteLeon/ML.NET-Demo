@@ -58,20 +58,6 @@ namespace GitHubIssueClassification
                 mlContext.Model.Save(model, trainingDataView.Schema, ModelPath);
             }
 
-            // 预测引擎
-            Helper.PrintLine("创建预测引擎...");
-            PredictionEngine<GitHubIssue, IssuePrediction> predEngine = mlContext.Model.CreatePredictionEngine<GitHubIssue, IssuePrediction>(model);
-
-            // 预测
-            Helper.PrintLine("预测：");
-            GitHubIssue issue = new GitHubIssue()
-            {
-                Title = "WebSockets communication is slow in my machine",
-                Description = "The WebSockets communication used under the covers by SignalR looks like is going slow in my development machine.."
-            };
-            var prediction = predEngine.Predict(issue);
-            Helper.PrintLine($"\t=>{prediction.Area}");
-
             // 测试
             Helper.PrintLine("评估神经网络：");
             var testDataView = mlContext.Data.LoadFromTextFile<GitHubIssue>(TestDataPath, hasHeader: true);
@@ -80,6 +66,10 @@ namespace GitHubIssueClassification
             Helper.PrintLine($"\t=>宏观准确性：{testMetrics.MacroAccuracy:0.###}");
             Helper.PrintLine($"\t=>对数损失：{testMetrics.LogLoss:#.###}");
             Helper.PrintLine($"\t=>对数损失减小：{testMetrics.LogLossReduction:#.###}");
+
+            // 预测
+            Helper.PrintLine("预测：");
+            Predict(mlContext, model);
 
             Helper.Exit(0);
         }
@@ -105,6 +95,49 @@ namespace GitHubIssueClassification
             return pipeline;
         }
 
+        /// <summary>
+        /// 使用神经网络模型预测问题分类
+        /// </summary>
+        /// <param name="mlContext"></param>
+        /// <param name="model"></param>
+        private static void Predict(MLContext mlContext, ITransformer model)
+        {
+            // 创建预测引擎
+            Helper.PrintLine("创建预测引擎...");
+            var engine = mlContext.Model.CreatePredictionEngine<GitHubIssue, IssuePrediction>(model);
 
+            (string Title, string Description, bool Exit) inputs;
+            while (!(inputs = GetInputs()).Exit)
+            {
+                var issue = new GitHubIssue() { Title = inputs.Title, Description = inputs.Description };
+                var prediction = engine.Predict(issue);
+                Helper.PrintLine($"=> {prediction.Area}");
+            }
+
+            Console.ResetColor();
+            Helper.PrintLine("结束预测");
+
+            (string Title, string Description, bool Exit) GetInputs()
+            {
+                Console.ResetColor();
+                Helper.PrintLine("输入问题标题以预测问题分类 (输入 exit 跳出预测)：");
+                Console.Write(">>>\t请输入：");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                var title = Console.ReadLine();
+                if (title.ToLower() == "exit")
+                {
+                    return (title, string.Empty, true);
+                }
+
+                Console.ResetColor();
+                Helper.PrintLine("输入问题描述以预测问题分类：");
+                Console.Write(">>>\t请输入：");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                var description = Console.ReadLine();
+                Console.ForegroundColor = ConsoleColor.Magenta;
+
+                return (title, description, false);
+            }
+        }
     }
 }
