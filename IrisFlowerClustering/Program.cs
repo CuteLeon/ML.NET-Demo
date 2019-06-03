@@ -64,8 +64,8 @@ namespace IrisFlowerClustering
             Helper.PrintLine("预测：");
             var predictor = mlContext.Model.CreatePredictionEngine<IrisData, ClusterPrediction>(model);
             var prediction = predictor.Predict(setosa);
-            Console.WriteLine($"所属集群: {prediction.PredictedClusterId}");
-            Console.WriteLine($"特征差距: {string.Join(" ", prediction.Distances)}");
+            Helper.PrintLine($"所属集群: {prediction.PredictedClusterId}");
+            Helper.PrintLine($"特征差距: {string.Join(" ", prediction.Distances)}");
 
             Helper.Exit(0);
         }

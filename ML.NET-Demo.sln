@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubIssueClassification",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxiFarePrediction", "TaxiFarePrediction\TaxiFarePrediction.csproj", "{EBC1C1DB-38CA-439D-A2C2-7D6B9D3C3A6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IrisFlowerClustering", "IrisFlowerClustering\IrisFlowerClustering.csproj", "{83875CA2-F68A-46D3-B355-D4BC56F5F2E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IrisFlowerClustering", "IrisFlowerClustering\IrisFlowerClustering.csproj", "{83875CA2-F68A-46D3-B355-D4BC56F5F2E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieRecommendation", "MovieRecommendation\MovieRecommendation.csproj", "{EEF4BEE6-C9EB-46F6-81F7-0BD2F6EE972B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{83875CA2-F68A-46D3-B355-D4BC56F5F2E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83875CA2-F68A-46D3-B355-D4BC56F5F2E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83875CA2-F68A-46D3-B355-D4BC56F5F2E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF4BEE6-C9EB-46F6-81F7-0BD2F6EE972B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF4BEE6-C9EB-46F6-81F7-0BD2F6EE972B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF4BEE6-C9EB-46F6-81F7-0BD2F6EE972B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF4BEE6-C9EB-46F6-81F7-0BD2F6EE972B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -123,23 +123,19 @@
 
 ## 分析情绪(二元分类)
 
-> 数据源：[UCI Sentiment Labeled Sentences 数据集 zip 文件](https://archive.ics.uci.edu/ml/machine-learning-databases/00331/sentiment labelled sentences.zip) 的 yelp_labelled.txt
-
 
 
 ## 对支持问题进行分类(多类分类)
-
-> 数据源：[issues_train.tsv](https://raw.githubusercontent.com/dotnet/samples/master/machine-learning/tutorials/GitHubIssueClassification/Data/issues_train.tsv) 和 [issues_test.tsv](https://raw.githubusercontent.com/dotnet/samples/master/machine-learning/tutorials/GitHubIssueClassification/Data/issues_test.tsv)
 
 
 
 ## 预测价格(回归)
 
-> 数据集：[taxi-fare-train.csv](https://github.com/dotnet/machinelearning/blob/master/test/data/taxi-fare-train.csv) 和 [taxi-fare-test.csv](https://github.com/dotnet/machinelearning/blob/master/test/data/taxi-fare-test.csv)
-
 
 
 ## 对鸢尾花进行分类(K 平均值聚类分析)
 
-> 数据集：[iris.data](https://github.com/dotnet/machinelearning/blob/master/test/data/iris.data)
+
+
+## 影片推荐系统(矩阵因子分解)
 
