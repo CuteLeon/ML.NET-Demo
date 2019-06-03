@@ -139,3 +139,119 @@
 
 ## 影片推荐系统(矩阵因子分解)
 
+
+
+# 加载数据
+
+## 使用列特性注释数据模型
+
+### LoadColumn
+
+​	指定属性的列索引，只有从文件加载的数据才需要此特性。
+
+**用法：**
+
+- [LoadColumn(int index)]
+  - 指定第 index 列数据；
+- [LoadColumn(int start, int end)]
+  - 指定第 {start} 至 {end} 列数据；
+- [LoadColumn(int[] indexs)]
+  - 指定数组 indexs 对应的所有列数据；
+
+### VectorType
+
+​	指定多列数据读取为向量格式，需要此多列数据的类型相同。
+
+**用法：**
+
+- [VectorType()]
+  - 将成员标记为具有未知大小的一维数组；
+- [VectorType(int size)]
+  - 将成员标记为 {size} 指定大小的一维数组；
+  - size = 0 表示矢量类型的长度未知；
+- [VectorType(int[] dimensions)]
+  - 将成员标记为 {dimensions} 指定维度的多维数组；
+  - 维度数组内应为非负数；
+  - dimensions = 0 表示多维数组在此维度的长度未知；
+
+### ColumnName
+
+​	指定列名称更改为该属性名称以外的其他名称。
+
+​	在内存中创建对象时，仍然使用该属性名称创建对象；但是对于数据处理和生成机器学习模型，ML.NET 使用 此特性中提供的值覆盖并引用该属性。
+
+
+
+```csharp
+public class HousingData
+{
+    [LoadColumn(0)]
+    public float Size { get; set; }
+ 
+    [LoadColumn(1, 3)]
+    [VectorType(3)]
+    public float[] HistoricalPrices { get; set; }
+
+    [LoadColumn(4)]
+    [ColumnName("Label")]
+    public float CurrentPrice { get; set; }
+}
+```
+
+
+
+## 从单个文件加载数据
+
+​	若要从文件加载数据，请使用 `LoadFromTextFile` 方法以及要加载的数据的数据模型。 
+
+​	由于 `separatorChar` 参数**默认为制表符分隔**，因此请根据需要为数据文件更改该参数。 
+
+​	如果文件有标头，请将 `hasHeader` 参数设置为 `true`，以忽略文件中的第一行并开始从第二行加载数据。
+
+```csharp
+//Create MLContext
+MLContext mlContext = new MLContext();
+
+//Load Data
+IDataView data = mlContext.Data.LoadFromTextFile<HousingData>("my-data-file.csv", separatorChar: ',', hasHeader: true);
+```
+
+
+
+## 从多个目录中的文件加载
+
+​	若要从多个目录加载数据，请使用 `CreateTextLoader` 方法创建 `TextLoader`。 然后，使用 `TextLoader.Load` 方法并指定单个文件路径（不能使用通配符）。
+
+```csharp
+//Create MLContext
+MLContext mlContext = new MLContext();
+
+// Create TextLoader
+TextLoader textLoader = mlContext.Data.CreateTextLoader<HousingData>(separatorChar: ',', hasHeader: true);
+
+// Load Data
+IDataView data = textLoader.Load("DataFolder/SubFolder1/1.txt", "DataFolder/SubFolder2/1.txt");
+```
+
+## 从流式处理源加载数据
+
+​	除了加载存储在磁盘上的数据外，ML.NET 还支持从各种流式处理源加载数据，这些源包括但不限于：
+
+- 内存中集合
+- JSON/XML
+- 数据库
+
+> 请注意，在使用流式处理源时，ML.NET 预计输入采用内存中集合的形式。 因此，在使用 JSON/XML 等源时，请确保将数据格式化为内存中集合。
+
+```csharp
+IDataView dataView = mlContext.Data.LoadFromEnumerable<Model>(this.GetModels());
+
+IEnumerable<Model> GetModels()
+	=> System.Linq.Enumerable.Range(0, 100).Select(index => new Model(index));
+```
+
+
+
+# 准备数据
+
+## 筛选数据
