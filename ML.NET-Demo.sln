@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentAnalysis", "Sentim
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubIssueClassification", "GitHubIssueClassification\GitHubIssueClassification.csproj", "{67178272-3D4E-40AB-BA46-715FCA1C35A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxiFarePrediction", "TaxiFarePrediction\TaxiFarePrediction.csproj", "{EBC1C1DB-38CA-439D-A2C2-7D6B9D3C3A6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxiFarePrediction", "TaxiFarePrediction\TaxiFarePrediction.csproj", "{EBC1C1DB-38CA-439D-A2C2-7D6B9D3C3A6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IrisFlowerClustering", "IrisFlowerClustering\IrisFlowerClustering.csproj", "{83875CA2-F68A-46D3-B355-D4BC56F5F2E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{EBC1C1DB-38CA-439D-A2C2-7D6B9D3C3A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBC1C1DB-38CA-439D-A2C2-7D6B9D3C3A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBC1C1DB-38CA-439D-A2C2-7D6B9D3C3A6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83875CA2-F68A-46D3-B355-D4BC56F5F2E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83875CA2-F68A-46D3-B355-D4BC56F5F2E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83875CA2-F68A-46D3-B355-D4BC56F5F2E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83875CA2-F68A-46D3-B355-D4BC56F5F2E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

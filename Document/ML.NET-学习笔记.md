@@ -139,3 +139,7 @@
 
 
 
+## 对鸢尾花进行分类(K 平均值聚类分析)
+
+> 数据集：[iris.data](https://github.com/dotnet/machinelearning/blob/master/test/data/iris.data)
+
