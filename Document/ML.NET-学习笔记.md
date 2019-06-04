@@ -6,6 +6,8 @@
 >
 > Tutorials: https://github.com/dotnet/samples/tree/master/machine-learning/tutorials
 >
+> API: https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.data?view=ml-dotnet
+>
 > ML.NETModelBuilder: https://marketplace.visualstudio.com/items?itemName=MLNET.07
 >
 > ML.NETModelBuilder-Tutorial: https://dotnet.microsoft.com/learn/machinelearning-ai/ml-dotnet-get-started-tutorial/intro
@@ -255,3 +257,248 @@ IEnumerable<Model> GetModels()
 # 准备数据
 
 ## 筛选数据
+
+​	`DataOperationsCatalog` 包含一组筛选操作，这些操作接收包含所有数据的 `IDataView`，并返回仅包含关注数据点的 `IDataView`。 
+
+```csharp
+IDataView filteredData = mlContext.Data.FilterRowsByColumn(dataView, "Price", lowerBound: 200000, upperBound: 1000000);
+```
+
+## 替换缺失值
+
+​	处理缺失值的一种方法是使用给定类型的默认值（如有）或其他有意义的值（例如数据中的平均值）替换它们。
+
+> ReplaceMissingValues 仅适用于数字类型
+
+```csharp
+using Microsoft.ML.Transforms;
+
+// 训练数据集合
+IDataView trainingDataView = ...;
+// Mean：使用平均值填充缺失的值
+var replacementEstimator = mlContext.Transforms.ReplaceMissingValues(
+    "Price", 
+    replacementMode: MissingValueReplacingEstimator.ReplacementMode.Mean);
+// 训练评估器
+ITransformer replacementTransformer = replacementEstimator.Fit(trainingDataView);
+// 返回填充完成的数据集
+trainingDataView = replacementTransformer.Transform(trainingDataView);
+```
+## 使用规范化程序
+
+### 最大-最小规范化
+
+​	规范化是一种数据预处理技术，用于标准化比例不同的特征，这有助于算法更快地融合。
+
+```csharp
+IDataView trainingDataView = ...;
+var minMaxEstimator = mlContext.Transforms.NormalizeMinMax("Price");
+ITransformer minMaxTransformer = minMaxEstimator.Fit(trainingDataView);
+IDataView transformedData = minMaxTransformer.Transform(trainingDataView);
+```
+
+​	将一组任何区间的数字转换为一组在0~1区间内的数字，值为 当前数字与数组内最大值之比。
+
+​	例如：原始价格值 `[200000,100000]` 使用 `MinMax` 规范化公式转换为 `[ 1, 0.5 ]`。
+
+### 分箱
+
+​	分箱将连续值转换为输入的离散表示形式。
+
+```csharp
+IDataView trainingDataView = ...;
+var binningEstimator = mlContext.Transforms.NormalizeBinning("Price", maximumBinCount: 2);
+var binningTransformer = binningEstimator.Fit(trainingDataView);
+IDataView transformedData = binningTransformer.Transform(trainingDataView);
+```
+
+​	 `maximumBinCount` 参数使你可以指定对数据进行分类所需的箱数；
+
+## 使用分类数据
+
+​	在用于生成机器学习模型之前，需要将非数字分类数据转换为数字。
+
+```csharp
+IDataView trainingDataView = ...;
+var categoricalEstimator = mlContext.Transforms.Categorical.OneHotEncoding("VehicleType");
+ITransformer categoricalTransformer = categoricalEstimator.Fit(trainingDataView);
+IDataView transformedData = categoricalTransformer.Transform(trainingDataView);
+```
+
+## 使用文本数据
+
+​	将一系列转换应用于输入文本列，从而生成表示 lp 规范化字词和 n 元语法的数字向量。将复杂的文本处理步骤合并到一个 `EstimatorChain` 中以消除干扰，并可能根据需要减少所需的处理资源量。
+
+```csharp
+IDataView trainingDataView = ...;
+var textEstimator = mlContext.Transforms.Text.FeaturizeText("Description");
+ITransformer textTransformer = textEstimator.Fit(trainingDataView);
+IDataView transformedData = textTransformer.Transform(trainingDataView);
+```
+
+**原始文本：This is a good product**
+
+| Transform              | 说明                               | 结果                                            |
+| :--------------------- | :--------------------------------- | :---------------------------------------------- |
+| NormalizeText          | 默认情况下将所有字母转换为小写字母 | this is a good product                          |
+| TokenizeWords          | 将字符串拆分为单独的字词           | ["this","is","a","good","product"]              |
+| RemoveDefaultStopWords | 删除 *is* 和 *a* 等非索引字        | ["good","product"]                              |
+| MapValueToKey          | 根据输入数据将值映射到键（类别）   | [1,2]                                           |
+| ProduceNGrams          | 将文本转换为连续单词的序列         | [1,1,1,0,0]                                     |
+| NormalizeLpNorm        | 按缩放的 lp 规范缩放输入           | [ 0.577350529, 0.577350529, 0.577350529, 0, 0 ] |
+
+
+
+# 训练和评估模型
+
+## 拆分数据用于训练和测试
+
+​	机器学习模型旨在识别训练数据中的模式。 这些模式用于使用新数据进行预测。
+
+​	使用 `TrainTestSplit` 方法将数据拆分为训练集和测试集。 结果将是一个 `TrainTestData` 对象，其中包含两个 `IDataView` 成员，一个用于训练集，另一个用于测试集。 数据拆分百分比由 `testFraction` 参数确定。 
+
+```csharp
+// 从训练数据集分拆 20% 作为测试数据集
+DataOperationsCatalog.TrainTestData dataSplit = mlContext.Data.TrainTestSplit(data, testFraction: 0.2);
+IDataView trainData = dataSplit.TrainSet;
+IDataView testData = dataSplit.TestSet;
+```
+
+## 准备数据
+
+​	在训练机器学习模型之前，需要对数据进行预处理。
+
+> ML.NET 算法对输入列类型存在约束。 此外，如果未指定任何值，则默认值会用于输入和输出列名。
+
+### 使用预期的列类型
+
+​	ML.NET 中的机器学习算法预期使用大小已知的浮点向量作为输入。 
+
+​	当所有数据都已经是数字格式并且打算一起处理（即图像像素）时，将 `VectorType` 属性应用于数据模型。
+
+​	如果数据不全为数字格式，并且想要单独对每个列应用不同的数据转换，请在处理所有列后使用 `Concatenate` 方法，以将所有单独的列合并为一个特征向量并将特征向量输出到新列。
+
+```csharp
+IEstimator<ITransformer> dataPrepEstimator =
+    // 将 Size 和 HistoricalPrices 列合并为 Features 向量
+    mlContext.Transforms.Concatenate("Features", "Size", "HistoricalPrices")
+    	// 使用最大-最小规范化 Features 列
+        .Append(mlContext.Transforms.NormalizeMinMax("Features"));
+```
+
+### 使用默认列名
+
+​	未指定列名时，ML.NET 算法会使用默认列名。 
+
+​	所有训练程序都有一个名为 `featureColumnName`的参数可用于算法的输入，并且在适用情况下，它们还有一个用于预期值的名为 `labelColumnName`的参数。 默认情况下，这些值分别为 `'Features'` 和 `'Label'`。
+
+​	也可以自定义指定 label 和 feature 列名称：
+
+```csharp
+var UserDefinedColumnSdcaEstimator = mlContext.Regression.Trainers.Sdca(labelColumnName: "MyLabelColumnName", featureColumnName: "MyFeatureColumnName");
+```
+
+## 训练机器学习模型
+
+​	对数据进行预处理后，使用 [`Fit`](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.trainerestimatorbase-2.fit) 方法通过 [`StochasticDualCoordinateAscent`](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcaregressiontrainer) 回归算法训练机器学习模型。
+
+```csharp
+// 定义估算器
+var sdcaEstimator = mlContext.Regression.Trainers.Sdca();
+
+// 训练机器学习模型
+var trainedModel = sdcaEstimator.Fit(transformedTrainingData);
+```
+
+## 提取模型参数
+
+​	训练模型后，提取已学习的 [`ModelParameters`](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.modelparametersbase-1) 用于检查或重新训练，提供经过训练的模型的偏差和已学习的系数或权重。
+
+```csharp
+var trainedModelParameters = trainedModel.Model as LinearRegressionModelParameters;
+```
+
+> 不同的机器学习任务可转换为不同的 ModelParameters 类型提供神经元的权重和偏置：Microsoft.ML.Trainers.*Parameters
+
+## 评估模型质量
+
+​	若要帮助选择性能最佳的模型，必须评估其在测试数据中的性能。
+
+> 不同的机器学习任务生成不同类型的评估指标对象：Microsoft.ML.Data.*Metrics
+
+
+
+# 使用交叉验证训练和评估机器学习模型
+
+​	交叉验证是一种训练和模型评估技术，**可将数据拆分为多个分区，并利用这些分区训练多个算法**。此技术通过保留来自训练过程的数据来提高模型的可靠性。 除提高不可见观测的性能之外，在数据受限的环境中，它还可用作使用较小数据集训练模型的有效工具。
+
+## 数据和数据模型
+
+```
+Size (Sq. ft.), HistoricalPrice1 ($), HistoricalPrice2 ($), HistoricalPrice3 ($), Current Price ($)
+620.00, 148330.32, 140913.81, 136686.39, 146105.37
+550.00, 557033.46, 529181.78, 513306.33, 548677.95
+1127.00, 479320.99, 455354.94, 441694.30, 472131.18
+1120.00, 47504.98, 45129.73, 43775.84, 46792.41
+```
+
+```csharp
+public class HousingData
+{
+    [LoadColumn(0)]
+    public float Size { get; set; }
+ 
+    [LoadColumn(1, 3)]
+    [VectorType(3)]
+    public float[] HistoricalPrices { get; set; }
+
+    [LoadColumn(4)]
+    [ColumnName("Label")]
+    public float CurrentPrice { get; set; }
+}
+```
+
+## 准备数据
+
+```csharp
+IEstimator<ITransformer> dataPrepEstimator = 
+    mlContext.Transforms.Concatenate("Features", new string[] { "Size", "HistoricalPrices" })
+        .Append(mlContext.Transforms.NormalizeMinMax("Features"));
+ITransformer dataPrepTransformer = dataPrepEstimator.Fit(data);
+IDataView transformedData = dataPrepTransformer.Transform(data);
+```
+
+## 使用交叉验证训练模型
+
+```csharp
+IEstimator<ITransformer> sdcaEstimator = mlContext.Regression.Trainers.Sdca();
+// numberOfFolds：交叉验证层数
+var cvResults = mlContext.Regression.CrossValidate(transformedData, sdcaEstimator, numberOfFolds: 5);
+```
+
+`CrossValidate` 执行以下操作：
+
+1. 将数据分为多个分区，数量为 `numberOfFolds` 参数中指定的值。 
+2. 使用训练数据集上的指定机器学习算法估算器在每个分区上训练模型。
+3. 每个模型的性能在测试数据集上使用 `Evaluate` 方法进行评估。
+4. 为每个模型返回模型及其指标(CrossValidationResult类型的集合)
+
+## 提取指标
+
+```csharp
+IEnumerable<double> rSquared = cvResults.Select(fold => fold.Metrics.RSquared);
+```
+
+## 选择性能最好的模型
+
+​	使用 R 平方等指标按性能最好到性能最差的顺序选择模型。 然后，选择性能最好的模型来进行预测或执行其他操作。
+
+```csharp
+var preferModel = cvResults
+    .OrderByDescending(result => result.Metrics.RSquared)
+    .FirstOrDefault()?
+    .Model;
+```
+
+
+
