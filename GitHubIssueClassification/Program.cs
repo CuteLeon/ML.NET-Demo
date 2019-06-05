@@ -6,7 +6,7 @@ using ML.Utils;
 
 namespace GitHubIssueClassification
 {
-    class Program
+    internal class Program
     {
         /// <summary>
         /// 训练数据路径
@@ -23,7 +23,7 @@ namespace GitHubIssueClassification
         /// </summary>
         private static readonly string ModelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Datas", "Model.zip");
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Helper.PrintLine("创建 MLContext...");
             MLContext mlContext = new MLContext(seed: 0);
