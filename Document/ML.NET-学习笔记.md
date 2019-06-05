@@ -500,5 +500,136 @@ var preferModel = cvResults
     .Model;
 ```
 
+# 在处理期间检查中间数据值
 
+​	在 ML.NET 的加载、处理和训练步骤中检查值。
+
+## 将 IDataView 转换为 IEnumerable
+
+​	检查 `IDataView` 的值的最快方法之一是将其转换为 `IEnumerable`。 若要将 `IDataView` 转换为 `IEnumerable`，请使用 `CreateEnumerable` 方法。
+
+​	若要优化性能，请将 `reuseRowObject` 的值设置为 `true`。 如果这样做，将在评估当前行的数据时延迟填充相同的对象，而不是为数据集中的每一行创建一个新对象。
+
+```csharp
+System.Collections.Generic.IEnumerable<Model> rows =
+	mlContext.Data.CreateEnumerable<Model>(trainingDataView, reuseRowObject: true);
+
+foreach (var row in rows)
+{
+}
+```
+
+​	如果只需要访问部分数据或特定索引，请使用 `CreateEnumerable` 并将 `reuseRowObject` 参数值设置为 `false`，以便为数据集中每个请求的行创建一个新对象。 然后，将 `IEnumerable` 转换为数组或列表。
+
+## 检查单个列中的值
+
+​	在模型生成过程中的任何时候，都可以使用 `GetColumn` 方法访问 `IDataView` 的单个列中的值。`GetColumn` 方法将单个列中的所有值都返回为 `IEnumerable`。
+
+```csharp
+IEnumerable<float> sizeColumn = data.GetColumn<float>("Size").ToList();
+```
+
+## 一次检查一行 IDataView 值
+
+​	`IDataView` 延迟求值。 若要循环访问 `IDataView` 的各行，而不按本文档前面部分所示转换为 `IEnumerable`，请通过使用 `GetRowCursor` 方法并传入 `IDataView` 的 DataViewSchema 作为参数来创建 `DataViewRowCursor`。 然后，若要循环访问各行，请使用 `MoveNext` 游标方法以及 `ValueGetter` 委托从每个列中提取相应的值。
+
+> 出于性能考虑，ML.NET 中的向量使用 `VBuffer` 而不是本机集合类型
+
+```csharp
+using Microsoft.ML.Data;
+
+// 获取数据集大纲
+DataViewSchema schema = trainingDataView.Schema;
+// 获取数据集游标
+using (DataViewRowCursor cursor = trainingDataView.GetRowCursor(schema))
+{
+    float size = default;
+    Microsoft.ML.Data.VBuffer<float> historicalPrices = default;
+    float currentPrice = default;
+
+    // 定义读取数据的委托
+    ValueGetter<float> sizeDelegate = cursor.GetGetter<float>(schema[0]);
+    ValueGetter<Microsoft.ML.Data.VBuffer<float>> historicalPriceDelegate = cursor.GetGetter<Microsoft.ML.Data.VBuffer<float>>(schema[1]);
+    ValueGetter<float> currentPriceDelegate = cursor.GetGetter<float>(schema[2]);
+
+    // 使用迭代器遍历数据集，并使用委托读取数据
+    while (cursor.MoveNext())
+    {
+        sizeDelegate.Invoke(ref size);
+        historicalPriceDelegate.Invoke(ref historicalPrices);
+        currentPriceDelegate.Invoke(ref currentPrice);
+    }
+}
+```
+
+## 预览数据子集的预处理或训练结果
+
+> **请勿在生产代码中使用 `Preview`，因为它专用于调试，可能会降低性能**
+
+​	模型生成过程是实验性的和迭代的。 若要预览对数据子集预处理或训练机器学习模型后的数据，请使用可返回 `DataDebuggerPreview` 的 `Preview` 方法。 其结果为一个具有 `ColumnView` 和 `RowView`属性的对象，这两个属性都是 `IEnumerable` 并包含特定列或行中的值。 使用 `maxRows` 参数指定要应用转换的行数。
+
+
+
+# 使用排列特征重要性解释模型预测
+
+​	借助排列特征重要性 (PFI) 理解特征对预测的贡献，了解如何解释 ML.NET 机器学习模型预测。
+
+​	机器学习模型通常被视为黑盒，它们接收输入并生成输出。 人们对影响输出的中间步骤或特征之间的交互了解甚少。随着机器学习被引入日常生活的更多方面，理解机器学习模型为何做出其决策变得至关重要。模型的可解释性水平越高，就越有信心接受或拒绝模型做出的决策。
+
+​	有各种技术被用于解释模型，其中之一是 PFI。 PFI 是一种用于解释分类和回归模型的技术。其**工作原理是一次随机为整个数据集随机抽取数据的一个特征，并计算关注性能指标的下降程度。 变化越大，特征就越重要。通过突出显示最重要的特征，模型生成器可以专注于使用一组更有意义的特征，这可能会减少干扰和训练时间**。
+
+## 加载数据
+
+```
+1,24,13,1,0.59,3,96,11,23,608,14,13,32
+4,80,18,1,0.37,5,14,7,4,346,19,13,41
+2,98,16,1,0.25,10,5,1,8,689,13,36,12
+```
+
+```csharp
+class HousingPriceData
+{
+    [LoadColumn(0)]
+    public float CrimeRate { get; set; }
+
+    [LoadColumn(1)]
+    public float ResidentialZones { get; set; }
+
+    [LoadColumn(2)]
+    public float CommercialZones { get; set; }
+
+    [LoadColumn(3)]
+    public float NearWater { get; set; }
+
+    [LoadColumn(4)]
+    public float ToxicWasteLevels { get; set; }
+
+    [LoadColumn(5)]
+    public float AverageRoomNumber { get; set; }
+
+    [LoadColumn(6)]
+    public float HomeAge { get; set; }
+
+    [LoadColumn(7)]
+    public float BusinessCenterDistance { get; set; }
+
+    [LoadColumn(8)]
+    public float HighwayAccess { get; set; }
+
+    [LoadColumn(9)]
+    public float TaxRate { get; set; }
+
+    [LoadColumn(10)]
+    public float StudentTeacherRatio { get; set; }
+
+    [LoadColumn(11)]
+    public float PercentPopulationBelowPoverty { get; set; }
+
+    [LoadColumn(12)]
+    [ColumnName("Label")]
+    public float Price { get; set; }
+}
+```
+
+## 定型模型
 
