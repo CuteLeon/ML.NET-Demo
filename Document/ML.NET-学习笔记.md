@@ -797,7 +797,47 @@ float[] scoreColumn = predictions.GetColumn<float>("Score").ToArray();
 - SgdNonCalibratedTrainer
 - SymbolicSgdLogisticRegressionBinaryTrainer
 
+## 加载预先训练的模型
 
+```csharp
+Helper.PrintLine("重新训练模型项目");
+MLContext mlContext = new MLContext();
+
+Helper.PrintLine("加载数据处理管道和神经网络模型...");
+ITransformer dataPrepPipeline = mlContext.Model.Load(DataPipelinePath, out DataViewSchema dataPrepPipelineSchema);
+ITransformer trainedModel = mlContext.Model.Load(ModelPath, out DataViewSchema modelSchema);
+```
+
+## 提取预先训练的模型参数
+
+​	加载模型后，通过访问预先训练模型的 `Model` 属性来提取已学习的模型参数。 使用线性回归模型 `OnlineGradientDescentTrainer` 训练预先训练的模型，该线性回归模型可创建输出 `LinearRegressionModelParameters` 的 `RegressionPredictionTransformer`]。 这些线性回归模型参数包含模型已学习的偏差和权重或系数。 这些值将用作新的重新训练模型的起点。
+
+```csharp
+LinearRegressionModelParameters originalMP =
+	((ISingleFeaturePredictionTransformer<object>)trainedModel).Model as LinearRegressionModelParameters;
+```
+
+## 重新训练模型
+
+​	重新训练模型的过程与训练模型的过程没有什么不同。 唯一的区别是，除了数据之外，[`Fit`](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.onlinelineartrainer-2.fit) 方法还将原始学习模型参数作为输入，并将它们用作重新训练过程的起点。
+
+```csharp
+ HousingData[] housingData = new []{};
+ IDataView newData = mlContext.Data.LoadFromEnumerable(housingData);
+ IDataView transformedNewData = dataPrepPipeline.Transform(newData);
+
+RegressionPredictionTransformer<LinearRegressionModelParameters> retrainedModel =
+	mlContext.Regression.Trainers.OnlineGradientDescent()
+		.Fit(transformedNewData, originalMP);
+```
+
+## 比较模型参数
+
+```csharp
+LinearRegressionModelParameters retrainedMP = retrainedModel.Model as LinearRegressionModelParameters;
+
+Helper.PrintLine($"比较模型参数变化：\n\t源模型参数\t|更新模型参数\t|变化\n\t{string.Join("\n\t", originalMP.Weights.Append(originalMP.Bias).Zip(retrainedMP.Weights.Append(retrainedMP.Bias)).Select(weights => $"{weights.First:F2}\t|{weights.Second:F2}\t|{weights.Second - weights.First:F2}"))}");
+```
 
 
 
