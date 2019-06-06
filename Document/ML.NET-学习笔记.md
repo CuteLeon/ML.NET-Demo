@@ -697,3 +697,108 @@ var featureImportanceMetrics = pfi
 Helper.PrintLine($"特征 PFI:\n\t{string.Join("\n\t", featureImportanceMetrics.Select(feature => $">>> {featureColumnNames[feature.index]}\n\tMean: {feature.RSquared.Mean:F6}\n\tStandardDeviation: {feature.RSquared.StandardDeviation:F6}\n\tStandardError: {feature.RSquared.StandardError:F6}"))}");
 ```
 
+
+
+# 保存和加载经过训练的模型
+
+​	在整个模型生成过程中，模型位于内存中，并且可以在整个应用程序生命周期中访问。 但是，一旦应用程序停止运行，而模型未在本地或远程的某个位置保存，则无法再访问该模型。 通常情况下，在其他应用程序中训练模型之后，某些时候会使用模型进行推理或重新训练。 因此，存储模型很重要。
+
+​	由于大部分模型和数据准备管道都继承自同一组类，这些组件的保存和加载方法签名相同。 根据用例，可以将数据准备管道和模型合并为单个 `EstimatorChain`（输出单个 `ITransformer`），也可将它们分隔，从而为其各自创建单独的 `ITransformer`。
+
+## 在本地保存模型
+
+​	保存模型时，需要以下两项：
+
+1. 模型的 `ITransformer`。
+2. `ITransformer` 预期输入的 `DataViewSchema`。
+
+​	训练模型后，通过 `Save` 方法使用输入数据的 `DataViewSchema` 将经过训练的模型保存到名为 `model.zip` 的文件中。
+
+```csharp
+mlContext.Model.Save(trainedModel, data.Schema, "model.zip");
+```
+
+## 加载本地存储的模型
+
+​	在单独的应用程序或进程中，配合使用 `Load` 方法和文件路径将经过训练的模型载入应用程序。
+
+```csharp
+ITransformer trainedModel = mlContext.Model.Load("model.zip", out DataViewSchema modelSchema);
+```
+
+## 加载远程存储的模型
+
+​	若要将存储在远程位置的数据准备管道和模型加载到应用程序中，请使用 `Stream`，而不要使用 `Load` 方法中的文件路径。
+
+```csharp
+using System.Net.Http;
+
+MLContext mlContext = new MLContext();
+
+ITransformer trainedModel;
+using (HttpClient client = new HttpClient())
+{
+	Stream modelFile = await client.GetStreamAsync("{远程文件服务地址}");
+	trainedModel = mlContext.Model.Load(modelFile, out DataViewSchema modelSchema);
+}
+```
+
+## 使用单独的数据准备和模型管道
+
+> 使用单独的数据准备和模型训练管道是可选方案。 管道的分离使得用户能够更轻松地检查已学习的模型参数。 对于预测，保存和加载包含数据准备和模型训练操作的单个管道更轻松。
+
+​	使用单独的数据准备管道和模型时，流程与单个管道相同；但现在需要同时保存和加载两个管道。
+
+### 保存数据准备管道和经过训练的模型
+
+### 加载数据准备管道和经过训练的模型
+
+
+
+# 使用经过训练的模型进行预测
+
+## 单一预测
+
+​	若要进行单一预测，请使用加载的预测管道创建 `PredictionEngine`。
+
+```csharp
+PredictionEngine<InModel, OutModel> predictionEngine = mlContext.Model.CreatePredictionEngine<InModel, OutModel>(predictionTransformer);
+```
+
+​	然后，使用 `Predict` 方法并将输入数据作为参数传入。 请注意，使用 `Predict` 方法不要求输入为 `IDataView`。 这是因为它可以方便地内在化输入数据类型操作，以便能够传入输入数据类型的对象。
+
+## 批量预测
+
+```csharp
+// 准备输入对象
+InModel[] inputDatas = new []{};
+// 使用模型转换
+IDataView predictions = predictionPipeline.Transform(inputDatas);
+// 获取预测结果
+float[] scoreColumn = predictions.GetColumn<float>("Score").ToArray();
+```
+
+
+
+# 重新训练模型
+
+​	这个世界和它周围的数据在不断变化。 因此，模型也需要更改和更新。 借助 ML.NET 提供的功能，可以将已学习的模型参数作为起点并不断汲取以往经验来重新训练模型，而不必每次都从头开始。
+
+​	以下算法可在 ML.NET 中重新训练：
+
+- AveragedPerceptronTrainer
+- FieldAwareFactorizationMachineTrainer
+- LbfgsLogisticRegressionBinaryTrainer
+- LbfgsMaximumEntropyMulticlassTrainer
+- LbfgsPoissonRegressionTrainer
+- LinearSvmTrainer
+- OnlineGradientDescentTrainer
+- SgdCalibratedTrainer
+- SgdNonCalibratedTrainer
+- SymbolicSgdLogisticRegressionBinaryTrainer
+
+
+
+
+
+

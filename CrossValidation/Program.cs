@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CrossValidation.Models;
@@ -11,7 +10,7 @@ namespace CrossValidation
     class Program
     {
         private static readonly string TrainDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Datas", "data.csv");
-        private static readonly string BestModelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Datas", "BestModel.csv");
+        private static readonly string BestModelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Datas", "BestModel.zip");
 
         static void Main(string[] args)
         {

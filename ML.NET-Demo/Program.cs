@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
+using Microsoft.ML.Data;
+using Microsoft.ML.Trainers;
 using ML.NET_Demo.DataReader;
 using ML.NET_Demo.Models;
 using ML.Utils;
@@ -46,7 +48,7 @@ namespace ML.NET_Demo
                 // 导出训练模型
                 mlContext.Model.Save(model, trainingData.Schema, "model.zip");
             }
-
+            
             // 预测
             /* Score: 分数 表示神经网络的输出 */
             Helper.PrintLine($"预测：");
