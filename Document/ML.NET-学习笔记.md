@@ -898,3 +898,7 @@ public class PredictController : ControllerBase
 }
 ```
 
+
+
+# 使用 Infer.NET 和概率性编程创建游戏匹配列表
+
