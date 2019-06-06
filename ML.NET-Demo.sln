@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieRecommendation", "Movi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossValidation", "CrossValidation\CrossValidation.csproj", "{FF2946B6-BC62-477C-9524-8F1C271282C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PermutationFeatureImportance", "PermutationFeatureImportance\PermutationFeatureImportance.csproj", "{F33F3B8D-760E-4FAF-9F92-C14B4A8A6C12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{FF2946B6-BC62-477C-9524-8F1C271282C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF2946B6-BC62-477C-9524-8F1C271282C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF2946B6-BC62-477C-9524-8F1C271282C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F33F3B8D-760E-4FAF-9F92-C14B4A8A6C12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33F3B8D-760E-4FAF-9F92-C14B4A8A6C12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F33F3B8D-760E-4FAF-9F92-C14B4A8A6C12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F33F3B8D-760E-4FAF-9F92-C14B4A8A6C12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
