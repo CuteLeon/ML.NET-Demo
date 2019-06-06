@@ -841,4 +841,60 @@ Helper.PrintLine($"比较模型参数变化：\n\t源模型参数\t|更新模型
 
 
 
+# 在 ASP.NET Core Web API 中部署模型
+
+## 创建 ASP.NET Core Web API 项目
+
+​	安装“Microsoft.ML NuGet 包；
+
+​	安装 **Microsoft.Extensions.ML Nuget 包；**
+
+​	将神经网络模型文件添加到项目，并将复”制到输出目录”的值更改为“如果较新则复制”；
+
+## 注册 PredictionEnginePool 用于应用程序
+
+​	若要进行单个预测，请使用 `PredictionEngine`。 若要在应用程序中使用 `PredictionEngine`，则必须在需要时创建它。 在这种情况下，可考虑的最佳做法是依赖项注入。
+
+```csharp
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.ML;
+
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddPredictionEnginePool<InModel, OutModel>()
+        .FromFile("model.zip");
+}
+```
+
+> `PredictionEngine` 不是线程安全类型。 为了提高性能和线程安全性，请使用 `PredictionEnginePool` 服务，该服务可创建 `PredictionEngine` 对象的 `ObjectPool` 供应用程序使用。
+
+## 创建预测控制器
+
+```csharp
+using Microsoft.Extensions.ML;
+
+public class PredictController : ControllerBase
+{
+    private readonly PredictionEnginePool<InModel, OutModel> _predictionEnginePool;
+
+    public PredictController(PredictionEnginePool<InModel,OutModel> predictionEnginePool)
+    {
+        _predictionEnginePool = predictionEnginePool;
+    }
+
+    [HttpPost]
+    public ActionResult<string> Post([FromBody] InModel input)
+    {
+        if(!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        OutModel prediction = _predictionEnginePool.Predict(input);
+
+        return Ok(prediction);
+    }
+}
+```
 
