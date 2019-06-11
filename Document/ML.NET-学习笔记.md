@@ -902,3 +902,11 @@ public class PredictController : ControllerBase
 
 # 使用 Infer.NET 和概率性编程创建游戏匹配列表
 
+## 什么是概率性编程
+
+​	借助概率性编程，可创建真实过程的统计模型。
+
+## 安装 Infer.NET 包
+
+​	需安装 `Microsoft.ML.Probabilistic.Compiler` 包才能使用 Infer.NET。
+
