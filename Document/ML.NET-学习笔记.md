@@ -12,6 +12,8 @@
 >
 > ML.NETModelBuilder-Tutorial: https://dotnet.microsoft.com/learn/machinelearning-ai/ml-dotnet-get-started-tutorial/intro
 >
+> MSDN: https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml?view=ml-dotnet
+>
 > Author: Leon
 >
 > Date: 2019/05/24
@@ -910,3 +912,338 @@ public class PredictController : ControllerBase
 
 ​	需安装 `Microsoft.ML.Probabilistic.Compiler` 包才能使用 Infer.NET。
 
+
+
+# 机器学习重要术语词汇表
+
+## 准确性
+
+​	在分类中，准确性是正确分类的项数目除以测试集内的项总数。 范围从 0（最不准确）到 1（最准确）。 准确性是模型性能的评估指标之一。 将其与精度、撤回 和 F 分数 结合考虑。
+
+## 曲线下面积 (AUC)
+
+​	二元分类中的一项评估指标，即曲线下面积值，它绘制真阳性率（y 轴）与误报率（x 轴）进行对照。 范围从 0.5（最差）到 1（最佳）。 也称为 ROC 曲线下面积，即，接受者操作特征曲线。
+
+## 二元分类
+
+​	一个分类事例，其中标签仅为两个类中的一个。
+
+## 校准
+
+​	校准是将原始分数映射到类成员身份的过程，用于二元和多类分类。 一些 ML.NET 训练程序的后缀为 `NonCalibrated`。 这些算法会生成一个原始分数，该分数之后必须映射到类概率。
+
+## Catalog
+
+​	在 ML.NET 中，目录是扩展函数的集合，按常见用途进行分组。
+
+## 分类
+
+​	当使用这些数据来预测某一类别，监管式机器学习任务被称为“分类”。
+
+​	二元分类指的是仅预测两个类别（例如，将图像划分为“猫”或“狗”图片）。 多类分类指的是预测多个类别（例如，当将图像划分为特定品种狗的图片）。
+
+## 决定系数
+
+​	回归中的一项评估指标，表明数据与模型的匹配程度。 范围从 0 到 1。 值 0 表示数据是随机的，否则就无法与模型相匹配。 值 1 表示模型与数据完全匹配。 这通常称为 ^2、R^2 或 r 平方值。
+
+## 数据
+
+​	数据是所有机器学习应用程序的核心。 在 ML.NET 中，数据由 [IDataView](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.idataview) 对象表示。 数据视图对象：
+
+- 由列和行组成
+- 延迟计算，即它们仅在操作调用数据时加载数据
+- 包含定义了每个列的类型、格式和长度的架构
+
+## 估算器
+
+​	ML.NET 中实现 IEstimator 接口的类。
+
+​	估算器是一种转换（数据准备转换和机器学习模型训练转换）规范。 估算器可以链接在一起形成转换管道。 调用 Fit 时，会学习估算器或估算器管道的参数。 Fit 的结果为转换器。
+
+## 扩展方法
+
+​	一种 .NET 方法，它是类的一部分，但在类外部定义。 扩展方法的第一个参数是对扩展方法所属的类的静态 `this` 引用。
+
+## 功能
+
+​	正在对其进行度量的现象的一个可度量属性，通常是一个数（双精度）值。 多个特征被称为“特征向量”且通常存储为 `double[]`。 这些特征定义所度量现象的重要特性。
+
+## 特征工程
+
+​	特征工程是涉及定义一组特征和开发软件以从可用现象数据中生成特征向量（即特征提取）的过程。
+
+## F 分数
+
+​	分类中的一项评估指标，它平衡精度和撤回。
+
+## 超参数
+
+​	机器学习算法的参数。 示例包括在决策林中学习的树的数量，或者梯度下降算法中的步长。 在对模型进行定型之前，先设置超参数的值，并控制查找预测函数参数的过程，例如，决策树中的比较点或线性回归模型中的权重。
+
+## Label
+
+​	使用机器学习模型进行预测的元素。 例如，狗的品种或将来的股票价格。
+
+## 对数损失
+
+​	在分类中，描述分类器准确性的评估指标。 对数损失越小，分类器越准确。
+
+## 损失函数
+
+​	损失函数是指训练标签值与模型所做预测之间的差异。 通过最小化损失函数来估算模型参数。
+
+​	可以为不同的训练程序配置不同的损失函数。
+
+## 平均绝对误差 (MAE)
+
+​	回归中的一项评估指标，即所有模型误差的平均值，其中模型误差是预测标签值和正确标签值之间的差距。
+
+## 模型
+
+​	就传统意义而言，它是预测函数的参数。 例如，线性回归模型中的权重或决策树中的拆分点。 在 ML.NET 中，一个模型包含预测域对象标签所需的所有信息（例如，图像或文本）。 这意味着 ML.NET 模型包括所需的特征化步骤以及预测函数参数。
+
+## 多类分类
+
+​	一个分类事例，其中标签是三个或更多类中的一个。
+
+## N 元语法
+
+​	文本数据的特征提取方案：N 个单词的任何序列都将转变为特征值。
+
+## 数字特征向量
+
+​	只包含数值的特征向量。 这与 `double[]` 非常类似。
+
+## 管道
+
+​	要将模型与数据集相匹配所需的所有操作。 管道由数据导入、转换、特征化和学习步骤组成。 对管道进行定型后，它会转变为模型。
+
+## 精度
+
+​	在分类中，类的精度是正确预测为属于该类的项目的数量，除以预测为属于该类的项目的总数。
+
+## 撤回
+
+​	在分类中，类的撤回是正确预测为属于该类的项目的数量，除以实际属于该类的项目的总数。
+
+## 正则化
+
+​	正则化会对过于复杂的线性模型进行惩罚。 正则化有两种类型：
+
+- L1L1 正则化将无意义特征的权重归零。 进行这种正则化之后，所保存模型的大小可能会变小。
+- L2L2 正则化将无意义特征的权重范围最小化，这是一个更常规的过程，对离群值的敏感度也较低。
+
+## 回归测试
+
+​	监管式机器学习任务，其中输出是一个实际值，例如，双精度值。 示例包括预测股票价格。
+
+​	回归中的一项评估指标，即所有绝对误差总和除以正确标签值和所有正确标签值的平均值之间的差值总和。
+
+## 相对平方误差
+
+​	回归中的一项评估指标，即所有绝对平方误差总和除以正确标签值和所有正确标签值的平均值之间的平方差值总和。
+
+## 均方误差根 (RMSE)
+
+​	回归中的一项评估指标，即误差平方平均值的平方根。
+
+## 监管式机器学习
+
+​	机器学习的一个子类，其中所需的模型预测尚不可见的数据标签。 示例包括分类、回归以及结构化预测。
+
+## 训练
+
+​	识别给定定型数据集模型的过程。 对于线性模型，这意味着查找权重。 有关树信息，这涉及到标识拆分点。
+
+## 转换器
+
+​	一个实现 ITransformer 接口的 ML.NET 类。
+
+​	转换器可将一个 IDataView 转换为另一个 IDataView。 转换器是通过训练估算器或估算器管道创建的。
+
+## 非监管式机器学习
+
+​	机器学习的子类，其中所需的模型查找数据中的隐藏（或潜在）结构。 示例包括聚类分析、主题建模和维数约简。
+
+
+
+# ML.NET 中的机器学习任务
+
+## 二元分类
+
+​	监管式机器学习任务，用于预测数据实例所属的两个类（类别）。 分类算法输入是一组标记示例，其中每个标签为整数 0 或 1。 二元分类算法的输出是一个分类器，可用于预测未标记的新实例的类。二元分类方案示例包括：
+
+- 情绪“正面”或“负面”。
+- 诊断患者是否患有某种疾病。
+- 决定是否要将电子邮件标记为“垃圾邮件”。
+- 确定照片是否包含狗或水果。
+
+### 二元分类训练程序
+
+可以使用以下算法训练二元分类模型：
+
+- [AveragedPerceptronTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.averagedperceptrontrainer)
+- [SdcaLogisticRegressionBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcalogisticregressionbinarytrainer)
+- [SdcaNonCalibratedBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcanoncalibratedbinarytrainer)
+- [SymbolicSgdLogisticRegressionBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.symbolicsgdlogisticregressionbinarytrainer)
+- [LbfgsLogisticRegressionBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lbfgslogisticregressionbinarytrainer)
+- [LightGbmBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lightgbm.lightgbmbinarytrainer)
+- [FastTreeBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fasttreebinarytrainer)
+- [FastForestBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fastforestbinarytrainer)
+- [GamBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.gambinarytrainer)
+- [FieldAwareFactorizationMachineTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fieldawarefactorizationmachinetrainer)
+- [PriorTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.priortrainer)
+- [LinearSvmTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.linearsvmtrainer)
+
+### 二元分类输入和输出
+
+​	为了通过二元分类获得最佳结果，应平衡训练数据（即正训练数据和负训练数据的数量相等）。 应在训练前处理缺失值。
+
+| 输出列名称       | 列名称                                                       | 说明                                                         |
+| :--------------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| `Score`          | [Single](https://docs.microsoft.com/zh-cn/dotnet/api/system.single) | 由模型计算得出的原始分数                                     |
+| `PredictedLabel` | [Boolean](https://docs.microsoft.com/zh-cn/dotnet/api/system.boolean) | 预测的标签，基于分数符号。 负分数映射到 `false`，正分数映射到 `true`。 |
+
+## 多类分类
+
+​	[监管式机器学习](https://docs.microsoft.com/zh-cn/dotnet/machine-learning/resources/glossary#supervised-machine-learning)任务，用于预测数据实例的类（类别）。 分类算法输入是一组标记示例。 每个标签通常以文本形式开始。 然后通过 TermTransform 运行，它可将其转换为 Key（数字）类型。 分类算法的输出是一个分类器，可用于预测未标记的新实例的类。 多类分类方案示例包括：
+
+- 确定狗的品种等。
+- 了解电影评论是“正面”、“中立”还是“负面”。
+- 将酒店评语分类为“位置”、“价格”、“整洁度”等。
+
+> 一个与所有升级任何二元分类学习器，以便对多类数据集进行操作。
+
+### 多类分类训练程序
+
+可以使用以下训练算法训练多类分类模型：
+
+- [LightGbmMulticlassTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lightgbm.lightgbmmulticlasstrainer)
+- [SdcaMaximumEntropyMulticlassTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcamaximumentropymulticlasstrainer)
+- [SdcaNonCalibratedMulticlassTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcanoncalibratedmulticlasstrainer)
+- [LbfgsMaximumEntropyMulticlassTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lbfgsmaximumentropymulticlasstrainer)
+- [NaiveBayesMulticlassTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.naivebayesmulticlasstrainer)
+- [OneVersusAllTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.oneversusalltrainer)
+- [PairwiseCouplingTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.pairwisecouplingtrainer)
+
+### 多类分类输入和输出
+
+输入标签列数据必须为 [key](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.data.keydataviewtype) 类型。 特征列必须为 [Single](https://docs.microsoft.com/zh-cn/dotnet/api/system.single) 的固定大小向量。
+
+| 输出名称         | 类型                                                         | 说明                                                         |
+| :--------------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| `Score`          | [Single](https://docs.microsoft.com/zh-cn/dotnet/api/system.single)的向量 | 所有类的分数。 值越高意味着落入相关类的概率越高。 如果第 i 个元素具有最大值，则预测的标签索引为 i。 请注意，i 是从零开始的索引。 |
+| `PredictedLabel` | [key](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.data.keydataviewtype)类型 | 预测标签的索引。 如果其值为 i，则实际标签为键值输入标签类型中的第 i 个类别。 |
+
+## 回归测试
+
+​	监管式机器学习任务，用于从一组相关特征中预测标签值。 标签可以是任何实际值，而不是像在分类任务中那样来自一组有限的值。 回归算法模拟其相关特征上的标签依赖关系，以确定标签将如何随着特征值的变化而变化。 回归算法输入是一组带已知值标签的示例。 回归算法输出是一个函数，可用于预测任何一组新输入特征的标签值。 回归方案示例包括：
+
+- 基于房子特性（如卧室数量、位置或大小）来预测房价。
+- 基于历史数据和当前市场趋势预测将来的股票价格。
+- 基于广告预算预测产品销售。
+
+### 回归训练程序
+
+​	可以使用以下算法训练回归模型：
+
+- [LbfgsPoissonRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lbfgspoissonregressiontrainer)
+- [LightGbmRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lightgbm.lightgbmregressiontrainer)
+- [SdcaRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcaregressiontrainer)
+- [OlsTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.olstrainer)
+- [OnlineGradientDescentTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.onlinegradientdescenttrainer)
+- [FastTreeRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fasttreeregressiontrainer)
+- [FastTreeTweedieTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fasttreetweedietrainer)
+- [FastForestRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fastforestregressiontrainer)
+- [GamRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.gamregressiontrainer)
+
+### 回归输入和输出
+
+​	输入标签列数据必须为 Single。
+
+| 输出名称 | 类型                                                         | 说明               |
+| :------- | :----------------------------------------------------------- | :----------------- |
+| `Score`  | [Single](https://docs.microsoft.com/zh-cn/dotnet/api/system.single) | 模型预测的原始分数 |
+
+## 聚类分析
+
+​	非监管式机器学习任务，用于将数据实例分组到包含类似特性的群集。 聚类分析还可用来识别可能无法通过浏览或简单的观察以逻辑方式推导出的数据集中的关系。 聚类分析算法的输入和输出取决于选择的方法。 可以采取分发、质心、连接或基于密度的方法。 ML.NET 当前支持使用 K 平均值聚类分析的基于质心的方法。 聚类分析方案示例包括：
+
+- 基于酒店选择的习惯和特征来了解酒店来宾群。
+- 确定客户群和人口统计信息来帮助生成目标广告活动。
+- 基于生产指标对清单进行分类。
+
+### 聚类分析训练程序
+
+​	可以使用以下算法训练聚类分析模型：
+
+- [KMeansTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.kmeanstrainer)
+
+### 聚类分析输入和输出
+
+​	输入特征数据必须为 Single。 无需标签。
+
+| 输出名称         | 类型                                                         | 说明                             |
+| :--------------- | :----------------------------------------------------------- | :------------------------------- |
+| `Score`          | [Single](https://docs.microsoft.com/zh-cn/dotnet/api/system.single) 的向量 | 给定数据点到所有群集的质心的距离 |
+| `PredictedLabel` | [key](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.data.keydataviewtype) 类型 | 模型预测的最接近的群集的索引。   |
+
+## 异常情况检测
+
+​	此任务使用主体组件分析 (PCA) 创建异常情况检测模型。 基于 PCA 的异常情况检测有助于在以下场景中构建模型：可以很轻松地从一个类中获得定型数据（例如有效事务），但难以获得目标异常的足够示例。
+
+​	PCA 是机器学习中已建立的一种技术，由于它揭示了数据的内部结构，并解释了数据中的差异，因此经常被用于探索性数据分析。 PCA 的工作方式是通过分析包含多个变量的数据。 它查找变量之间的关联性，并确定最能捕捉结果差异的值的组合。 这些组合的特性值用于创建一个更紧凑的特性空间，称为主体组件。
+
+​	异常情况检测包含机器学习中的许多重要任务：
+
+- 识别潜在的欺诈交易。
+- 指示发生了网络入侵的学习模式。
+- 发现异常的患者群集。
+- 检查输入系统的值。
+
+​	根据定义，异常情况属于罕见事件，因此很难收集具有代表性的数据样本用于建模。 此类别中包含的算法是专门设计用来解决使用不平衡数据集建立和定型模型的核心挑战。
+
+### 异常情况检测训练程序
+
+​	可以使用以下算法训练异常情况检测模型：
+
+- [RandomizedPcaTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.randomizedpcatrainer)
+
+### 异常情况检测输入和输出
+
+​	输入特征必须为 Single 的固定大小向量。
+
+| 输出名称 | 类型                                                         | 说明                                     |
+| :------- | :----------------------------------------------------------- | :--------------------------------------- |
+| `Score`  | [Single](https://docs.microsoft.com/zh-cn/dotnet/api/system.single) | 由异常情况检测模型计算得出的非负无界分数 |
+
+## 排名
+
+​	排名任务从一组标记的示例构建排名程序。 该示例集由实例组组成，这些实例组可以使用给定的标准进行评分。 每个实例的排名标签是 { 0, 1, 2, 3, 4 }。 排名程序定型为用每个实例的未知分数对新实例组进行排名。 ML.NET 排名学习器基于机器已学习的排名。
+
+### 排名训练算法
+
+​	可以使用以下算法训练排名模型：
+
+- [LightGbmRankingTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lightgbm.lightgbmrankingtrainer)
+- [FastTreeRankingTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fasttreerankingtrainer)
+
+### 排名输入和输出
+
+​	输入标签数据类型必须为 key 类型或 Single。 标签的值决定相关性，其中较高的值表示较高的相关性。 如果标签为 key 类型，则键索引为相关性值，其中最小索引是最不相关的。 如果标签为 Single，则较大的值表示较高的相关性。
+
+​	特征数据必须为 Single 的固定大小向量，输入行组列必须为 key 类型。
+
+| 输出名称 | 类型                                                         | 说明                           |
+| :------- | :----------------------------------------------------------- | :----------------------------- |
+| `Score`  | [Single](https://docs.microsoft.com/zh-cn/dotnet/api/system.single) | 由模型计算以确定预测的无界分数 |
+
+## 建议
+
+​	推荐任务支持生成推荐产品或服务的列表。 ML.NET 使用矩阵因子分解 (MF)，这是一协作筛选算法，当目录中有历史产品评级数据时，推荐使用该算法。 例如，你为用户提供历史电影评级数据，并希望向他们推荐接下来可能观看的其他电影。
+
+### 建议训练算法
+
+​	可以使用以下算法训练建议模型：
+
+- [MatrixFactorizationTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.matrixfactorizationtrainer)
