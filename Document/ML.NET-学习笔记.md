@@ -1247,3 +1247,259 @@ public class PredictController : ControllerBase
 ​	可以使用以下算法训练建议模型：
 
 - [MatrixFactorizationTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.matrixfactorizationtrainer)
+
+
+
+# 如何选择 ML.NET 算法
+
+​	对于每个 ML.NET 任务，有多种训练算法可供选择。 选择哪个算法取决于尝试解决的问题、数据的特征以及可用的计算和存储资源。 **值得注意的是，训练机器学习模型是一个迭代过程。 可能需要尝试多种算法才能找到效果最好的算法。**
+
+​	算法在**特征**上运行。 特征是根据输入数据进行计算的数字值。 它们是机器学习算法的最佳输入。 可以使用一个或多个数据转换将原始输入数据转换为特征。 例如，文本数据被转换为一组字词计数和字词组合计数。 使用数据转换从原始数据类型中提取特征后，它们被称为**特征化**。 例如，特征化文本或特征化图像数据。
+
+## 训练程序 = 算法 + 任务
+
+​	算法是执行后可生成**模型**的数学运算。 不同的算法生成具有不同特征的模型。
+
+## 线性算法
+
+​	线性算法生成一个模型，该模型根据输入数据和一组**权重**的线性组合计算**分数**。 权重是训练期间估算的模型参数。
+
+​	线性算法适用于线性可分的特征。
+
+​	**在使用线性算法进行训练之前，应对特征进行规范化**。 这样可防止某个特征对结果产生比其他特征更多的影响。
+
+​	一般而言，**线性算法可缩放且速度快，训练和预测费用也很低**。 它们按特征数量进行缩放，并按训练数据集的大小粗略进行缩放。
+
+**线性训练程序**
+
+| 算法             | 属性                                                         | 训练程序                                                     |
+| :--------------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| 平均感知器       | 最适合用于文本分类                                           | [AveragedPerceptronTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.averagedperceptrontrainer) |
+| 随机双坐标上升   | 默认性能良好，不需要调整                                     | [SdcaLogisticRegressionBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcalogisticregressionbinarytrainer)、[SdcaNonCalibratedBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcanoncalibratedbinarytrainer)、[SdcaMaximumEntropyMulticlassTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcamaximumentropymulticlasstrainer)、[SdcaNonCalibratedMulticlassTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcanoncalibratedmulticlasstrainer) [SdcaRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.sdcaregressiontrainer) |
+| L-BFGS           | 在有大量特征时使用。 生成逻辑回归训练统计数据，但缩放性能不如 AveragedPerceptronTrainer | [LbfgsLogisticRegressionBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lbfgslogisticregressionbinarytrainer)、[LbfgsMaximumEntropyMulticlassTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lbfgsmaximumentropymulticlasstrainer)、[LbfgsPoissonRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lbfgspoissonregressiontrainer) |
+| 符号随机梯度下降 | 最快速、最准确的线性二元分类训练程序。 可随处理器数量很好地缩放 | [SymbolicSgdLogisticRegressionBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.symbolicsgdlogisticregressionbinarytrainer) |
+
+## 决策树算法
+
+​	决策树算法创建包含一系列决策的模型：实际上是包含数据值的流程图。
+
+​	特征不需要线性可分即可使用此类算法。 特征无需规范化，因为特征向量中的各个值在决策过程中独立使用。
+
+​	**决策树算法通常非常准确。**
+
+​	除广义加性模型 (GAM) 之外，在存在大量特征的情况下，树模型可能缺少可解释性。
+
+​	**决策树算法需要更多资源，并且缩放性能不如线性算法**。 它们在适用于内存的数据集中拥有良好性能。
+
+​	提升决策树是一组小型决策树，其中每个决策树对输入数据进行评分并将分数传递到下一个决策树来生成更好的分数，以此类推，其中每个决策树都会在之前决策树的基础上有所改进。
+
+**决策树训练程序**
+
+| 算法               | 属性                                                         | 训练程序                                                     |
+| :----------------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| 轻型梯度增强机     | 最快速、最准确的二元分类树训练程序。 高度可调                | [LightGbmBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lightgbm.lightgbmbinarytrainer)、[LightGbmMulticlassTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lightgbm.lightgbmmulticlasstrainer)、[LightGbmRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lightgbm.lightgbmregressiontrainer)、 [LightGbmRankingTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lightgbm.lightgbmrankingtrainer) |
+| 快速决策树         | 用于特征化图像数据。 在非均衡数据方面具有弹性。 高度可调     | [FastTreeBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fasttreebinarytrainer)、[FastTreeRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fasttreeregressiontrainer)、[FastTreeTweedieTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fasttreetweedietrainer)、[FastTreeRankingTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fasttreerankingtrainer) |
+| 快速林             | 适用于干扰性数据                                             | [FastForestBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fastforestbinarytrainer)、[FastForestRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fastforestregressiontrainer) |
+| 广义加性模型 (GAM) | 最适合用于使用决策树算法时表现良好但可解释性为优先事项的问题 | [GamBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.gambinarytrainer)、[GamRegressionTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.gamregressiontrainer) |
+
+## 矩阵分解
+
+| 属性                                   | 训练程序                                                     |
+| :------------------------------------- | :----------------------------------------------------------- |
+| 最适合用于具有大型数据集的稀疏分类数据 | [FieldAwareFactorizationMachineTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fieldawarefactorizationmachinetrainer) |
+
+## 元算法
+
+这些训练程序根据二元训练程序创建多类训练程序。 与 [AveragedPerceptronTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.averagedperceptrontrainer)、[LbfgsLogisticRegressionBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lbfgslogisticregressionbinarytrainer)、[SymbolicSgdLogisticRegressionBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.symbolicsgdlogisticregressionbinarytrainer)、[LightGbmBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.lightgbm.lightgbmbinarytrainer)、[FastTreeBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fasttreebinarytrainer)、[FastForestBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.fastforestbinarytrainer)、[GamBinaryTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.fasttree.gambinarytrainer) 配合使用。
+
+| 算法     | 属性                                                         | 训练程序                                                     |
+| :------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| 一对多   | 此多类分类器为每个类训练一个二元分类器，这可将该类与所有其他类区分开来。规模因要分类的类的数量而受到限制 | [OneVersusAllTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.oneversusalltrainer) |
+| 成对耦合 | 此多类分类器在每对类上训练二元分类算法。 规模因类的数量而受到限制，因为必须训练每个两个类的组合。 | [PairwiseCouplingTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.pairwisecouplingtrainer) |
+
+## K-Means
+
+| 属性         | 训练程序                                                     |
+| :----------- | :----------------------------------------------------------- |
+| 用于聚类分析 | [KMeansTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.kmeanstrainer) |
+
+## 主体组件分析
+
+| 属性             | 训练程序                                                     |
+| :--------------- | :----------------------------------------------------------- |
+| 用于异常情况检测 | [RandomizedPcaTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.randomizedpcatrainer) |
+
+## 朴素贝叶斯
+
+| 属性                                                     | 训练程序                                                     |
+| :------------------------------------------------------- | :----------------------------------------------------------- |
+| 当特征独立且训练数据集很小时，请使用此多类分类训练程序。 | [NaiveBayesMulticlassTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.naivebayesmulticlasstrainer) |
+
+## 前期训练程序
+
+| 属性                                                         | 训练程序                                                     |
+| :----------------------------------------------------------- | :----------------------------------------------------------- |
+| 使用此二元分类训练程序来确定其他训练程序的性能基线。 其他训练程序的指标应优于前期训练程序才能成为有效指标。 | [PriorTrainer](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.trainers.priortrainer) |
+
+
+
+# 数据转换
+
+​	数据转换用于为定型模型准备数据。
+
+​	一些数据转换需要通过定型数据来计算参数。需要先用数据训练管道，再用管道处理数据。
+
+​	另一些数据转换不需要定型数据。
+
+## 列映射和分组
+
+| Transform                                                    | 定义                               |
+| :----------------------------------------------------------- | :--------------------------------- |
+| [Concatenate](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.transformextensionscatalog.concatenate) | 将一个或多个输入列连接到新输出列中 |
+| [CopyColumns](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.transformextensionscatalog.copycolumns) | 复制和重命名一个或多个输入列       |
+| [DropColumns](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.transformextensionscatalog.dropcolumns) | 删除一个或多个输入列               |
+| [SelectColumns](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.transformextensionscatalog.selectcolumns) | 选择一个或多个不包含输入数据的列   |
+
+## 规范化和缩放
+
+| Transform                                                    | 定义                                                         |
+| :----------------------------------------------------------- | :----------------------------------------------------------- |
+| [NormalizeMeanVariance](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.normalizationcatalog.normalizemeanvariance) | 减去（定型数据的）平均值，再除以（定型数据的）方差           |
+| [NormalizeLogMeanVariance](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.normalizationcatalog.normalizelogmeanvariance) | 根据定型数据的对数进行规范化                                 |
+| [NormalizeLpNorm](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.normalizationcatalog.normalizelpnorm) | 按 [lp 范数](https://en.wikipedia.org/wiki/Lp_space#The_p-norm_in_finite_dimensions)缩放输入向量，其中 p 为 1、2 或无穷大。 默认为 l2（欧几里得距离）范数 |
+| [NormalizeGlobalContrast](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.normalizationcatalog.normalizeglobalcontrast) | 缩放行中的每个值，具体方法是减去行数据的平均值，除以（行数据的）标准差或 l2 范数，再乘以可配置的比例因子（默认值为 2） |
+| [NormalizeBinning](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.normalizationcatalog.normalizebinning) | 将输入值分配到箱索引，并除以箱数量，以生成介于 0 和 1 之间的浮点值。计算箱边界是为了在各个箱中均匀分布定型数据 |
+| [NormalizeSupervisedBinning](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.normalizationcatalog.normalizesupervisedbinning) | 根据与标签列的相关性，将输入值分配到箱                       |
+| [NormalizeMinMax](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.normalizationcatalog.normalizeminmax) | 按定型数据最小值和最大值的差值缩放输入                       |
+
+## 数据类型转换
+
+| Transform                                                    | 定义                                         |
+| :----------------------------------------------------------- | :------------------------------------------- |
+| [ConvertType](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.conversionsextensionscatalog.converttype) | 将输入列的类型转换为新类型                   |
+| [MapValue](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.conversionsextensionscatalog.mapvalue) | 根据提供的映射字典将值映射到键（类别）       |
+| [MapValueToKey](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.conversionsextensionscatalog.mapvaluetokey) | 通过从输入数据创建映射，将值映射到键（类别） |
+| [MapKeyToValue](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.conversionsextensionscatalog.mapkeytovalue) | 将键转换回原始值                             |
+| [MapKeyToVector](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.conversionsextensionscatalog.mapkeytovector) | 将键转换回原始值的向量                       |
+| [MapKeyToBinaryVector](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.conversionscatalog.mapkeytobinaryvector) | 将键转换回原始值的二元向量                   |
+| [Hash](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.conversionsextensionscatalog.hash) | 哈希处理输入列中的值                         |
+
+## 文本转换
+
+| Transform                                                    | 定义                                                     |
+| :----------------------------------------------------------- | :------------------------------------------------------- |
+| [FeaturizeText](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.featurizetext) | 将文本列转换为规范化 ngram 和 char-gram 计数的浮点数组   |
+| [TokenizeIntoWords](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.tokenizeintowords) | 将一个或多个文本列拆分为各个字词                         |
+| [TokenizeIntoCharactersAsKeys](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.tokenizeintocharactersaskeys) | 将一个或多个文本列拆分为关于一组主题的各个字符浮点数     |
+| [NormalizeText](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.normalizetext) | 更改大小写，删除标注字符、标点符号和数字                 |
+| [ProduceNgrams](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.producengrams) | 将文本列转换为一组 ngram 计数（连续单词的序列）          |
+| [ProduceWordBags](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.producewordbags) | 将文本列转换为一组 ngram 向量计数                        |
+| [ProduceHashedNgrams](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.producehashedngrams) | 将文本列转换为已哈希处理的 ngram 计数向量                |
+| [ProduceHashedWordBags](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.producehashedwordbags) | 将文本列转换为一组已哈希处理的 ngram 计数                |
+| [RemoveDefaultStopWords](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.removedefaultstopwords) | 从输入列中删除指定语言的默认停用词                       |
+| [RemoveStopWords](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.removestopwords) | 从输入列中删除指定的停用词                               |
+| [LatentDirichletAllocation](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.latentdirichletallocation) | 将文档（表示为浮点数向量）转换为关于一组主题的浮点数向量 |
+| [ApplyWordEmbedding](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.textcatalog.applywordembedding) | 使用预定型模型将文本令牌向量转换为句向量                 |
+
+## 图像转换
+
+| Transform                                                    | 定义                                                         |
+| :----------------------------------------------------------- | :----------------------------------------------------------- |
+| [ConvertToGrayscale](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.imageestimatorscatalog.converttograyscale) | 将图像转换为灰度图像                                         |
+| [ConvertToImage](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.imageestimatorscatalog.converttoimage) | 将像素向量转换为 [ImageDataViewType](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.transforms.image.imagedataviewtype) |
+| [ExtractPixels](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.imageestimatorscatalog.extractpixels) | 将输入图像中的像素转换为数字向量                             |
+| [LoadImages](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.imageestimatorscatalog.loadimages) | 将图像从文件夹加载到内存中                                   |
+| [ResizeImages](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.imageestimatorscatalog.resizeimages) | 调整图像大小                                                 |
+
+## 分类数据转换
+
+| Transform                                                    | 定义                                                         |
+| :----------------------------------------------------------- | :----------------------------------------------------------- |
+| [OneHotEncoding](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.categoricalcatalog.onehotencoding) | 将一个或多个文本列转换为[单热](https://en.wikipedia.org/wiki/One-hot)编码向量 |
+| [OneHotHashEncoding](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.categoricalcatalog.onehothashencoding) | 将一个或多个文本列转换为基于哈希的单热编码向量               |
+
+## 缺失值
+
+| Transform                                                    | 定义                                                         |
+| :----------------------------------------------------------- | :----------------------------------------------------------- |
+| [IndicateMissingValues](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.extensionscatalog.indicatemissingvalues) | 新建布尔输出列：如果输入列中缺少值，输出列的值为 true        |
+| [ReplaceMissingValues](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.extensionscatalog.replacemissingvalues) | 新建输出列：如果输入列中缺少值，输出列的值设置为默认值，否则设置为输入值 |
+
+## 功能选择
+
+| Transform                                                    | 定义                           |
+| :----------------------------------------------------------- | :----------------------------- |
+| [SelectFeaturesBasedOnCount](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.featureselectioncatalog.selectfeaturesbasedoncount) | 选择非默认值大于阈值的功能     |
+| [SelectFeaturesBasedOnMutualInformation](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.featureselectioncatalog.selectfeaturesbasedonmutualinformation) | 选择标签列中的数据最依赖的功能 |
+
+## 自定义转换
+
+| Transform                                                    | 定义                               |
+| :----------------------------------------------------------- | :--------------------------------- |
+| [CustomMapping](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.custommappingcatalog.custommapping) | 使用用户定义映射将现有列转换为新列 |
+
+
+
+# ML.NET 中的模型评估指标
+
+## 二元分类指标
+
+| 指标        | 说明                                                         | 期望                                                         |
+| :---------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| **准确性**  | [准确性](https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification)指正确预测与测试数据集的比例。 它是正确预测次数与输入示例总数的比率。 仅当属于每个类的示例数量相似时，它才能正常工作。 | **越接近 1.00 越好**。 但刚好 1.00 表示存在问题（通常包括：标签/目标泄漏、过度拟合或使用训练数据进行测试）。 当测试数据处于非平衡状态（大部分实例属于其中一个类）、数据集非常小，或分数趋近 0.00 或 1.00 时，准确性并不能真实反应分类器的效果，此时需要检查其他指标。 |
+| **AUC**     | [aucROC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic) 或*曲线下面积*：此指标通过扫描真正率和假正率来测量曲线下面积。 | **越接近 1.00 越好**。 应该大于 0.50 才可接受模型；AUC 为 0.50 或更小的模型毫无价值。 |
+| **AUCPR**   | [aucPR](https://www.coursera.org/lecture/ml-classification/precision-recall-curve-rENu8) 或*查准率-查全率曲线的曲线下面积*：在类非常不均衡的情况下（高度偏斜的数据集），是成功预测的有用度量值。 | **越接近 1.00 越好**。 接近 1.00 的高分表明分类器返回准确的结果（高查准率），以及返回大部分正结果（高查全率）。 |
+| **F1 分数** | [F1 分数](https://en.wikipedia.org/wiki/F1_score)也称为*均衡 F 分数或 F 度量值*。 这是查准率和查全率的调和平均数。 如果想要在查准率和查全率之间寻求平衡，F1 分数很有用。 | **越接近 1.00 越好**。 F1 分数的最佳值为 1.00，最差值为 0.00。它可指示分类器的查准率。 |
+
+## 多类分类指标
+
+| 指标             | 说明                                                         | 期望                                                         |
+| :--------------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| **微观准确性**   | [微平均准确性](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.data.multiclassclassificationmetrics.microaccuracy#Microsoft_ML_Data_MulticlassClassificationMetrics_MicroAccuracy)聚合所有类的贡献度来计算平均指标。 它是正确预测的实例的部分。 微平均不考虑类成员资格。 基本而言，每个“示例-类”对对准确性指标的贡献度相同。 | **越接近 1.00 越好**。 在多类分类任务中，如果怀疑可能存在类不均衡的现象（即 某个类的实例可能比其他类的实例多很多），则应选择微观准确性，而不是宏观准确性。 |
+| **宏观准确性**   | [宏平均准确性](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.data.multiclassclassificationmetrics.macroaccuracy#Microsoft_ML_Data_MulticlassClassificationMetrics_MacroAccuracy)指类级别的平均准确性。 每个类的准确性都会进行计算，宏观准确性就是这些准确性的平均值。 基本而言，每个类对准确性指标的贡献度相同。 占比较小的类与占比较大的类拥有同等的权重。 无论数据集包含多少个来自该类的实例，宏平均指标都会对每个类赋予相同的权重。 | **越接近 1.00 越好**。 它为每个类单独计算该指标，然后取平均值（因此实现平等对待所有类） |
+| **对数损失**     | [对数损失](http://wiki.fast.ai/index.php/Log_Loss)测量分类模型的性能，其中预测输入是介于 0.00 和 1.00 之间的概率值。 随着预测概率偏离实际标签，对数损失会增加。 | **越接近 0.00 越好**。 完美模型的对数损失为 0.00。 我们的机器学习模型旨在最小化此值。 |
+| **对数损失减小** | [对数损失减小](https://docs.microsoft.com/zh-cn/dotnet/api/microsoft.ml.data.multiclassclassificationmetrics.loglossreduction#Microsoft_ML_Data_MulticlassClassificationMetrics_LogLossReduction)可以解释为分类器相较随机预测的优势。 | **取值范围为 [-inf, 1.00]，其中 1.00 表示完美的预测，0.00 表示准确性一般的预测**。 例如，如果该值等于 0.20，则可以将其解释为“正确预测的概率比随机猜测的概率高 20%” |
+
+微观准确性通常能够更好地与 ML 预测的业务需求保持一致。 如果想要选择单个指标用于选择多类分类任务的质量，则通常应选择微观准确性。
+
+## 回归指标
+
+| 指标           | 说明                                                         | 期望                                                         |
+| :------------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| **R 平方**     | [R 平方 (R2)](https://en.wikipedia.org/wiki/Coefficient_of_determination) 又称为*决定系数*，其将模型的预测能力表示为取值范围介于 -inf 和 1.00 之间的值。 1.00 意味着完美拟合，且拟合度可以无穷差，因此分数可能为负数。分数为 0.00 表示模型正在猜测标签的预期值。 R2 测量实际测试数据值与预测值的接近程度。 | **越接近 1.00 表示质量越好**。 但是，有时较低的 R 平方值（例如 0.50）对于方案而言可能完全正常或足够好，并且较高的 R 平方值并不总是好结果且有时可疑。 |
+| **绝对值损失** | [绝对值损失](https://en.wikipedia.org/wiki/Mean_absolute_error)又称为*平均绝对误差 (MAE)*，其测量预测结果与实际结果的接近程度。 它是所有模型误差的平均值，其中模型误差是预测标签值和正确标签值之间的绝对差距。 为测试数据集的每个记录计算此预测误差。 最后，计算所有已记录的绝对误差的平均值。 | **越接近 0.00 表示质量越好。** 请注意，平均绝对误差使用与待测量数据相同的比例（未规范化为特定范围）。 绝对值损失、平方损失和 RMS 损失只能用于同一数据集的模型或具有类似标签值分布的数据集之间的比较。 |
+| **平方损失**   | [平方损失](https://en.wikipedia.org/wiki/Mean_squared_error)又称为*均方误差 (MSE)* 或*均方偏差 (MSD)*，可指示回归线与一组测试数据值的接近程度。 它通过获取从点到回归线的距离（这些距离即为误差 E）并对这些距离求平方来做到这一点。 求平方可赋予较大的差异更大的权重。 | 它始终是非负值，并且**越接近 0.00 的值越好**。 可能会无法获得非常小的均方误差值，具体取决于数据。 |
+| **RMS 损失**   | [RMS 损失](https://en.wikipedia.org/wiki/Root-mean-square_deviation)又称为*均方根误差 (RMSE)* 和 *均方根偏差 (RMSD)*，其测量模型预测的值与在建模环境中实际观测到的值之间的差异。 RMS 损失是平方损失的平方根，其具有与标签相同的单位，类似于绝对值损失，但赋予了较大的差异更大的权重。 均方根误差通常用于气候学、预测和回归分析，以验证试验结果。 | 它始终是非负值，并且**越接近 0.00 的值越好**。 RMSD 是准确性度量值，用于比较特定数据集的不同模型的预测误差，而不用于比较数据集之间的预测误差，因为它与比例相关。 |
+
+
+
+# 提高 ML.NET 模型准确性
+
+## 重新定义问题
+
+​	有时，改进模型可能与用于训练模型的数据或技术无关。 相反，可能只是提出了错误的问题。 考虑从不同的角度看待问题，并利用数据提取潜在指示和隐藏关系，以便优化问题。
+
+## 提供更多数据示例
+
+​	与人类一样，训练算法获得的信息越多，性能更好的可能性就越大。 提高模型性能的方法之一是为算法提供更多训练数据示例。 模型从中进行学习的数据越多，模型能够正确识别的案例就越多。
+
+## 为数据添加上下文
+
+​	单个数据点的含义可能难以解读。 围绕数据点生成上下文有助于算法和主题专家更好地做出决策。例如，房屋拥有三间卧室这一事实本身并不能很好地说明其价格。 但是，如果在添加上下文之后，现在知道它位于大都市圈附近的郊区，屋主平均年龄为 38 岁，家庭平均收入为 80,000 美元，附近学校的排名在前 20%，那么算法可在更多信息的基础之上做出自己的决策。 所有这些上下文都可以作为特征添加到机器学习模型的输入中。
+
+## 使用有意义的数据和特征
+
+​	虽然更多的数据示例和特征可以帮助提高模型的准确性，但它们也可能会引入干扰，因为并非所有数据和特征都有意义。 因此，了解哪些特征对算法所做的决策具有最大影响非常重要。 使用排列特征重要性 (PFI) 等技术可以帮助识别这些突出的特征，这不仅有助于解释模型，还可以使用输出作为特征选择方法来减少进入训练过程的干扰特征的数量。
+
+## 交叉验证
+
+​	交叉验证是一种训练和模型评估技术，可将数据拆分为多个分区，并利用这些分区训练多个算法。此技术通过保留来自训练过程的数据来提高模型的可靠性。 除提高不可见观测的性能之外，在数据受限的环境中，它还可用作使用较小数据集训练模型的有效工具。
+
+## 超参数调整
+
+​	训练机器学习模型是一个迭代和探索的过程。 例如，使用 K-Means 算法训练模型时，最优群集数是多少？ 答案取决于许多因素，例如数据的结构。 找到该数字需要尝试不同的 k 值，然后通过评估性能来确定最佳值。 调整这些参数以找到最佳模型的做法称为超参数调整。
+
+## 选择其他算法
+
+​	回归和分类等机器学习任务包含各种算法实现。 可能出现尝试解决的问题和数据的构造方式与当前算法不能很好地匹配的情况。 在此类情况下，请考虑为任务使用其他算法，查看它是否能够从数据中更好地学习。
+
