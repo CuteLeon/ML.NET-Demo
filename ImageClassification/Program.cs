@@ -55,7 +55,7 @@ namespace ImageClassification
         {
             foreach (ImagePrediction prediction in imagePredictionData)
             {
-                Console.WriteLine($"图像: {Path.GetFileName(prediction.ImagePath)} 预测为: {prediction.PredictedLabelValue} 得分: {prediction.Score.Max()} ");
+                Helper.PrintLine($"图像: {Path.GetFileName(prediction.ImagePath)} 预测为: {prediction.PredictedLabelValue} 得分: {prediction.Score.Max()} ");
             }
         }
 
@@ -110,8 +110,8 @@ namespace ImageClassification
             // 评估模型
             var multiclassContext = mlContext.MulticlassClassification;
             var metrics = multiclassContext.Evaluate(predictions, labelColumnName: LabelTokey, predictedLabelColumnName: "PredictedLabel");
-            Console.WriteLine($"对数损失: {metrics.LogLoss}");
-            Console.WriteLine($"每类对数损失: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
+            Helper.PrintLine($"对数损失: {metrics.LogLoss}");
+            Helper.PrintLine($"每类对数损失: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
 
             return model;
         }
@@ -154,7 +154,7 @@ namespace ImageClassification
             var predictor = mlContext.Model.CreatePredictionEngine<ImageData, ImagePrediction>(model);
             var prediction = predictor.Predict(imageData);
 
-            Console.WriteLine($"Image: {Path.GetFileName(imageData.ImagePath)} predicted as: {prediction.PredictedLabelValue} with score: {prediction.Score.Max()} ");
+            Helper.PrintLine($"Image: {Path.GetFileName(imageData.ImagePath)} predicted as: {prediction.PredictedLabelValue} with score: {prediction.Score.Max()} ");
         }
     }
 }
