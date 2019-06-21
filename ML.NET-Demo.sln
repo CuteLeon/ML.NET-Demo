@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetrainModel", "RetrainMode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeparateDataPreparationAndModelPipelines", "SeparateDataPreparationAndModelPipelines\SeparateDataPreparationAndModelPipelines.csproj", "{6AAB7B6C-7978-4730-AE09-1FD4EDC67F25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InferNet", "InferNet\InferNet.csproj", "{C95A765A-CF35-4E9B-8991-8E276244F16C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InferNet", "InferNet\InferNet.csproj", "{C95A765A-CF35-4E9B-8991-8E276244F16C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageClassification", "ImageClassification\ImageClassification.csproj", "{C0C6B410-977C-475F-997B-B82DE7D69A72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{C95A765A-CF35-4E9B-8991-8E276244F16C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C95A765A-CF35-4E9B-8991-8E276244F16C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C95A765A-CF35-4E9B-8991-8E276244F16C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0C6B410-977C-475F-997B-B82DE7D69A72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0C6B410-977C-475F-997B-B82DE7D69A72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0C6B410-977C-475F-997B-B82DE7D69A72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0C6B410-977C-475F-997B-B82DE7D69A72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
